@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { TarvisClient } from '../../../packages/server/src/index.js';
+import { TarvisClient, model_gpt_4 } from '../../../packages/server/src/index.js';
 import { ChatResponse } from '@tarvis/shared/src/index.js';
+import { mockGpt35Model } from './mockModels.js';
 
 // Load environment variables
 dotenv.config();
@@ -10,7 +11,17 @@ dotenv.config();
 const app = express();
 
 // Create TarvisClient instance
-const tarvisClient = new TarvisClient();
+const tarvisClient = new TarvisClient({
+  availableModels: [
+    model_gpt_4,
+    {
+      name: 'Mock GPT-3.5',
+      description: 'Mock model simulating GPT-3.5 capabilities',
+      id: 'mock-gpt-3.5',
+      ModelInstance: mockGpt35Model
+    }
+  ]
+});
 
 // Enable CORS
 app.use(cors());

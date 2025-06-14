@@ -1,12 +1,34 @@
 import { LangChainMessage } from './types/langchain';
+import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 export type { LangChainMessage } from './types/langchain';
+
+export type CustomModelInstance = {
+  stream: (messages: (HumanMessage | AIMessage | SystemMessage)[]) => AsyncIterable<{
+    content?: string;
+    usage_metadata?: {
+      input_tokens?: number;
+      output_tokens?: number;
+      total_tokens?: number;
+    };
+  }>;
+
+  invoke: (messages: (HumanMessage | AIMessage | SystemMessage)[]) => Promise<{
+    content: string;
+    usage_metadata?: {
+      input_tokens?: number;
+      output_tokens?: number;
+      total_tokens?: number;
+    };
+  }>;
+}
 
 export interface ModelInfo {
   id: string;
   name: string;
-  provider: string;
+  provider?: string;
   description?: string;
+  ModelInstance?: CustomModelInstance
 }
 
 export interface ChatRequest {
