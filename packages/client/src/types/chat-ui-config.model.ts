@@ -9,6 +9,6 @@ export interface ChatUiConfig {
   onMessageComplete?: (message: AssistantMessage, thread?: Thread) => void;
   systemPrompt?: string;
   temperature?: number;
-  model?: (typeof Model)[keyof typeof Model];
+  model?: (typeof Model)[keyof typeof Model] | string;
   availableModels?: ModelInfo[];
 }

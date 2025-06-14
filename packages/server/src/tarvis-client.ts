@@ -1,23 +1,37 @@
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { ChatRequest, ChatResponse, UsageMetadata } from '@tarvis/shared/src';
-import { createModel, isModelSupported } from './models';
+import {ChatRequest, ChatResponse, ModelInfo, UsageMetadata} from '@tarvis/shared/src';
+import { createOrGetModel, isModelSupported } from './models';
 import { formatSSEMessage } from './sse-utils';
+import {availableModels} from "@tarvis/shared/src/available-models";
 
 export type OnChunkCallback = (sseMessage: string) => void;
 export type OnCompleteCallback = (sseMessage: string) => void;
 export type OnErrorCallback = (sseMessage: string) => void;
 
+type TarvisClientOptions = {
+  defaultModelId?: string;
+  defaultTemperature?: number;
+  availableModels?: ModelInfo[];
+};
+
 export class TarvisClient {
   private defaultModelId: string;
   private defaultTemperature: number;
+  private availableModels: ModelInfo[] = availableModels;
 
-  constructor(options: { defaultModelId?: string; defaultTemperature?: number } = {}) {
+  constructor(options:
+    TarvisClientOptions = {}
+  ) {
     this.defaultModelId = options.defaultModelId || 'gpt-3.5-turbo';
     this.defaultTemperature = options.defaultTemperature || 0.7;
+
+    if (options.availableModels) {
+      this.availableModels = options.availableModels;
+    }
   }
 
   private async generateThreadTitle(userMessage: string, modelId: string): Promise<string> {
-    const titleModel = createModel(modelId, { temperature: 0.3 });
+    const titleModel = createOrGetModel(this.availableModels, modelId, { temperature: 0.3 });
     const messages = [
       new SystemMessage(
         'You are a helpful assistant that generates concise, descriptive titles for chat threads. The title should be 3-5 words maximum and capture the main topic of the conversation. Respond with ONLY the title, no additional text.'
@@ -45,7 +59,7 @@ export class TarvisClient {
     } = request;
 
     try {
-      if (!isModelSupported(modelId)) {
+      if (!isModelSupported(this.availableModels, modelId)) {
         throw new Error(`Unsupported model: ${modelId}`);
       }
 
@@ -62,7 +76,7 @@ export class TarvisClient {
         }
       });
 
-      const chatModel = createModel(modelId, { temperature });
+      const chatModel = createOrGetModel(this.availableModels, modelId, { temperature });
 
       const stream = await chatModel.stream(messages);
       let lastUsageMetadata: UsageMetadata | undefined;

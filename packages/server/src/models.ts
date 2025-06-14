@@ -2,7 +2,8 @@ import { ChatOpenAI } from '@langchain/openai';
 import { ChatGroq } from '@langchain/groq';
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
-import { availableModels, ModelProvider } from '../../shared/src/available-models';
+import { ModelProvider } from '../../shared/src/available-models';
+import {CustomModelInstance, ModelInfo} from "@tarvis/shared/src";
 
 // Model configuration types
 interface ModelConfig {
@@ -11,10 +12,14 @@ interface ModelConfig {
 }
 
 // Supported model types
-export type SupportedModel = ChatOpenAI | ChatGroq | ChatAnthropic | ChatGoogleGenerativeAI;
+export type SupportedModel = ChatOpenAI | ChatGroq | ChatAnthropic | ChatGoogleGenerativeAI | CustomModelInstance;
 
 // Model factory function
-export function createModel(modelId: string, config: ModelConfig = {}): SupportedModel {
+export function createOrGetModel(
+  availableModels: ModelInfo[],
+  modelId: string,
+  config: ModelConfig = {}
+): SupportedModel {
   const modelConfig = {
     temperature: 0.7,
     streaming: true,
@@ -22,8 +27,13 @@ export function createModel(modelId: string, config: ModelConfig = {}): Supporte
   };
 
   const selectedModel = availableModels.find(model => model.id === modelId);
+
   if (!selectedModel) {
     throw new Error(`Model with ID ${modelId} not found`);
+  }
+
+  if (typeof selectedModel.ModelInstance !== 'undefined') {
+    return selectedModel.ModelInstance
   }
 
   if (selectedModel.provider === ModelProvider.OPENAI) {
@@ -69,15 +79,9 @@ export function createModel(modelId: string, config: ModelConfig = {}): Supporte
   throw new Error(`Unsupported model: ${modelId}`);
 }
 
-// Helper function to check if a model is supported
-export function isModelSupported(modelId: string): boolean {
-  const supportedModels = [
-    'gpt-3.5-turbo',
-    'gpt-4',
-    'llama-3.3-70b-versatile',
-    'meta-llama/llama-4-scout-17b-16e-instruct',
-    'claude-3-5-sonnet-20240620',
-    'gemini-2.0-flash',
-  ];
-  return supportedModels.includes(modelId);
+export function isModelSupported(
+  availableModels: ModelInfo[],
+  modelId: string
+): boolean {
+  return availableModels.some(model => model.id === modelId)
 }
