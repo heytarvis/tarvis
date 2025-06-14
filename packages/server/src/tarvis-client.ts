@@ -104,7 +104,6 @@ export class TarvisClient {
         isRetry,
         usage_metadata: lastUsageMetadata,
       };
-      console.log(completionMessage);
       onComplete(formatSSEMessage(completionMessage));
     } catch (error) {
       console.error('Error processing message:', error);

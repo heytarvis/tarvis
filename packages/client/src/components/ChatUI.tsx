@@ -51,7 +51,6 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
   }, []);
 
   const scrollToBottom = () => {
-    console.log('scroll to bottom');
     const messagesContainer = messagesEndRef.current?.parentElement;
     if (messagesContainer) {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;

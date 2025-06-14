@@ -15,6 +15,7 @@
   "author": "Tom Österlund",
   "license": "ISC",
   "devDependencies": {
+    "@changesets/cli": "^2.29.4",
     "@fontsource/open-sans": "^5.2.5",
     "oxlint": "^1.1.0",
     "prettier": "^3.5.3",
