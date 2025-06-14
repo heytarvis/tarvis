@@ -1,0 +1,40 @@
+:root {
+  // Light theme (default)
+  --tarvis-bg-primary: #ffffff;
+  --tarvis-bg-secondary: #f7f7f8;
+  --tarvis-bg-tertiary: #f0f0f0;
+  --tarvis-text-primary: #2d3748;
+  --tarvis-text-secondary: #4a5568;
+  --tarvis-border-color: #e2e8f0;
+  --tarvis-hover-bg: #f0f0f0;
+  --tarvis-active-bg: #e2e8f0;
+  --tarvis-shadow-color: rgba(0, 0, 0, 0.1);
+  --tarvis-user-avatar-bg: #4299e1;
+  --tarvis-assistant-avatar-bg: #48bb78;
+  --tarvis-avatar-text: #ffffff;
+  --tarvis-input-bg: #ffffff;
+  --tarvis-button-hover: #f0f0f0;
+  --tarvis-button-active: #e2e8f0;
+  --tarvis-scrollbar-thumb: #cbd5e0;
+  --tarvis-scrollbar-track: #f7f7f8;
+}
+
+.is-dark {
+  --tarvis-bg-primary: #1a202c;
+  --tarvis-bg-secondary: #2d3748;
+  --tarvis-bg-tertiary: #4a5568;
+  --tarvis-text-primary: #f7fafc;
+  --tarvis-text-secondary: #e2e8f0;
+  --tarvis-border-color: #4a5568;
+  --tarvis-hover-bg: #2d3748;
+  --tarvis-active-bg: #4a5568;
+  --tarvis-shadow-color: rgba(0, 0, 0, 0.3);
+  --tarvis-user-avatar-bg: #3182ce;
+  --tarvis-assistant-avatar-bg: #38a169;
+  --tarvis-avatar-text: #ffffff;
+  --tarvis-input-bg: #2d3748;
+  --tarvis-button-hover: #2d3748;
+  --tarvis-button-active: #4a5568;
+  --tarvis-scrollbar-thumb: #4a5568;
+  --tarvis-scrollbar-track: #2d3748;
+}

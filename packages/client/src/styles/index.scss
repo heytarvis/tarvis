@@ -1,0 +1,76 @@
+@use 'colors';
+@use 'layout';
+@use 'model-selector';
+@use 'model-settings';
+@use 'chat-area';
+@use 'messages';
+@use 'input';
+
+@keyframes typing {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.25rem);
+  }
+}
+
+// Small screen styles
+.tarvis__is-small {
+  .tarvis__sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 8px var(--tarvis-shadow-color);
+  }
+
+  &.tarvis__sidebar-open {
+    .tarvis__sidebar {
+      transform: translateX(0);
+    }
+
+    .tarvis__chat-container {
+      transform: translateX(260px);
+    }
+  }
+
+  .tarvis__chat-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 1rem;
+  }
+
+  .tarvis__sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: none;
+    background: none;
+    color: var(--tarvis-text-primary);
+    cursor: pointer;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+
+    &:hover {
+      background-color: var(--tarvis-button-hover);
+    }
+
+    &:active {
+      background-color: var(--tarvis-button-active);
+    }
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+}

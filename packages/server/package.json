@@ -1,0 +1,43 @@
+{
+  "name": "@tarvis/server",
+  "version": "0.1.0-beta.0",
+  "description": "Tarvis server utilities",
+  "author": {
+    "name": "Tom Österlund",
+    "email": "tom@schedule-x.dev",
+    "url": "https://github.com/tomosterlund"
+  },
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.mts",
+        "require": "./dist/index.d.ts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --out-dir dist"
+  },
+  "peerDependencies": {
+    "@langchain/core": "^0.3.57",
+    "@langchain/groq": "^0.2.2",
+    "@langchain/openai": "^0.5.11",
+    "dotenv": "^16.5.0",
+    "langchain": "^0.3.27",
+    "ws": "^8.18.2"
+  },
+  "devDependencies": {
+    "@tarvis/shared": "workspace:*",
+    "@types/ws": "^8.18.1"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.22",
+    "@langchain/google-genai": "^0.2.11"
+  }
+}

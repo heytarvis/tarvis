@@ -1,0 +1,62 @@
+.tarvis__input-area {
+  padding: 1rem;
+  border-top: 1px solid var(--tarvis-border-color);
+  background-color: var(--tarvis-bg-secondary);
+  position: relative;
+}
+
+.tarvis__input-container {
+  display: flex;
+  gap: 0.5rem;
+  background-color: var(--tarvis-input-bg);
+  border: 1px solid var(--tarvis-border-color);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.tarvis__input {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 0.5rem;
+  color: var(--tarvis-text-primary);
+  font-size: 1rem;
+  resize: none;
+  outline: none;
+
+  &::placeholder {
+    color: var(--tarvis-text-secondary);
+  }
+}
+
+.tarvis__send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  background: none;
+  color: var(--tarvis-text-primary);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: var(--tarvis-button-hover);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--tarvis-button-active);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}

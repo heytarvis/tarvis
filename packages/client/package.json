@@ -1,0 +1,42 @@
+{
+  "name": "@tarvis/client",
+  "type": "module",
+  "version": "0.1.0-beta.5",
+  "description": "Tarvis AI chat component",
+  "author": {
+    "name": "Tom Österlund",
+    "email": "tom@schedule-x.dev",
+    "url": "https://github.com/tomosterlund"
+  },
+  "license": "MIT",
+  "keywords": [
+    "Chat assistant UI"
+  ],
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.mts",
+        "require": "./dist/index.d.ts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c && sass src/styles/index.scss dist/index.css --style compressed"
+  },
+  "peerDependencies": {
+    "@preact/signals": "^2.0.2",
+    "preact": "^10.19.2",
+    "@langchain/core": "^0.3.57",
+    "@langchain/openai": "^0.5.11",
+    "langchain": "^0.3.27"
+  },
+  "devDependencies": {
+    "@tarvis/shared": "workspace:*"
+  }
+}

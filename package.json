@@ -1,0 +1,33 @@
+{
+  "name": "chatkit",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "A JS library for building chat applications",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm -r run build",
+    "clean:build": "rm -rf ./packages/*/dist",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "ci:local": "oxlint && pnpm format"
+  },
+  "keywords": [],
+  "author": "Tom Österlund",
+  "license": "ISC",
+  "devDependencies": {
+    "@fontsource/open-sans": "^5.2.5",
+    "oxlint": "^1.1.0",
+    "prettier": "^3.5.3",
+    "rollup": "^4.41.1",
+    "sass": "^1.89.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "rollup-plugin-ts": "^3.4.5"
+  }
+}

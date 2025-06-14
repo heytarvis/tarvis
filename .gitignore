@@ -1,0 +1,6 @@
+dist/
+node_modules/
+.idea
+
+# .env in any folder
+.env

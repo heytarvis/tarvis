@@ -1,0 +1,15 @@
+{
+  "name": "@tarvis/shared",
+  "type": "module",
+  "version": "0.1.0-beta.2",
+  "description": "Tarvis AI shared utils",
+  "author": {
+    "name": "Tom Österlund",
+    "email": "tom@schedule-x.dev",
+    "url": "https://github.com/tomosterlund"
+  },
+  "license": "MIT",
+  "keywords": [
+    "Chat assistant UI"
+  ]
+}
