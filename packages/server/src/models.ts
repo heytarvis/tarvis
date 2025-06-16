@@ -3,7 +3,7 @@ import { ChatGroq } from '@langchain/groq';
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { ModelProvider } from '../../shared/src/available-models';
-import {CustomModelInstance, ModelInfo} from "@tarvis/shared/src";
+import { CustomModelInstance, ModelInfo } from '@tarvis/shared/src';
 
 // Model configuration types
 interface ModelConfig {
@@ -12,7 +12,12 @@ interface ModelConfig {
 }
 
 // Supported model types
-export type SupportedModel = ChatOpenAI | ChatGroq | ChatAnthropic | ChatGoogleGenerativeAI | CustomModelInstance;
+export type SupportedModel =
+  | ChatOpenAI
+  | ChatGroq
+  | ChatAnthropic
+  | ChatGoogleGenerativeAI
+  | CustomModelInstance;
 
 // Model factory function
 export function createOrGetModel(
@@ -33,7 +38,7 @@ export function createOrGetModel(
   }
 
   if (typeof selectedModel.ModelInstance !== 'undefined') {
-    return selectedModel.ModelInstance
+    return selectedModel.ModelInstance;
   }
 
   if (selectedModel.provider === ModelProvider.OPENAI) {
@@ -79,9 +84,6 @@ export function createOrGetModel(
   throw new Error(`Unsupported model: ${modelId}`);
 }
 
-export function isModelSupported(
-  availableModels: ModelInfo[],
-  modelId: string
-): boolean {
-  return availableModels.some(model => model.id === modelId)
+export function isModelSupported(availableModels: ModelInfo[], modelId: string): boolean {
+  return availableModels.some(model => model.id === modelId);
 }

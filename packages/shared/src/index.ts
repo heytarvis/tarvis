@@ -1,5 +1,5 @@
 import { LangChainMessage } from './types/langchain';
-import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 export type { LangChainMessage } from './types/langchain';
 
@@ -21,14 +21,14 @@ export type CustomModelInstance = {
       total_tokens?: number;
     };
   }>;
-}
+};
 
 export interface ModelInfo {
   id: string;
   name: string;
   provider?: string;
   description?: string;
-  ModelInstance?: CustomModelInstance
+  ModelInstance?: CustomModelInstance;
 }
 
 export interface ChatRequest {

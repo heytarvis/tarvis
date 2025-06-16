@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { TarvisClient, model_gpt_4 } from '../../../packages/server/src/index.js';
 import { ChatResponse } from '@tarvis/shared/src/index.js';
 import { mockGpt35Model } from './mockModels.js';
-import {Readable} from "node:stream";
+import { Readable } from 'node:stream';
 
 // Load environment variables
 dotenv.config();
@@ -19,9 +19,9 @@ const tarvisClient = new TarvisClient({
       name: 'Mock GPT-3.5',
       description: 'Mock model simulating GPT-3.5 capabilities',
       id: 'mock-gpt-3.5',
-      ModelInstance: mockGpt35Model
-    }
-  ]
+      ModelInstance: mockGpt35Model,
+    },
+  ],
 });
 
 // Enable CORS

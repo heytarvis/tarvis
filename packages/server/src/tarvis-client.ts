@@ -1,8 +1,8 @@
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
-import {ChatRequest, ChatResponse, ModelInfo, UsageMetadata} from '@tarvis/shared/src';
+import { ChatRequest, ChatResponse, ModelInfo, UsageMetadata } from '@tarvis/shared/src';
 import { createOrGetModel, isModelSupported } from './models';
 import { formatSSEMessage } from './sse-utils';
-import {availableModels} from "@tarvis/shared/src/available-models";
+import { availableModels } from '@tarvis/shared/src/available-models';
 
 export type OnChunkCallback = (sseMessage: string) => void;
 export type OnCompleteCallback = (sseMessage: string) => void;
@@ -19,9 +19,7 @@ export class TarvisClient {
   private defaultTemperature: number;
   private availableModels: ModelInfo[] = availableModels;
 
-  constructor(options:
-    TarvisClientOptions = {}
-  ) {
+  constructor(options: TarvisClientOptions = {}) {
     this.defaultModelId = options.defaultModelId || 'gpt-3.5-turbo';
     this.defaultTemperature = options.defaultTemperature || 0.7;
 
@@ -141,7 +139,7 @@ export class TarvisClient {
           controller.close();
           onError?.(formattedError);
         }
-      }
+      },
     });
   }
 }
