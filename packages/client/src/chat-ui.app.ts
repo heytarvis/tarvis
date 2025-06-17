@@ -1,7 +1,8 @@
-import { ChatUiContext } from './types/chat-ui-context.model';
+import { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
 import { createElement, render } from 'preact';
 import ChatUIComponent from './components/ChatUI';
 import { CustomComponentFn, CustomComponentFns } from './types/app';
+import {ClientPlugin} from "@tarvis/shared/src/types/client-plugin";
 
 export class ChatUI {
   #ctx: ChatUiContext;
@@ -12,6 +13,8 @@ export class ChatUI {
   }
 
   render(el: HTMLElement): void {
+    this.#beforeRender();
+
     this.#preactRoot = document.createElement('div');
     this.#preactRoot.className = 'tarvis__preact-root';
     el.appendChild(this.#preactRoot);
@@ -31,5 +34,13 @@ export class ChatUI {
    * */
   _setCustomComponentFn(fnId: keyof CustomComponentFns, fn: CustomComponentFn) {
     this.#ctx.customComponents[fnId] = fn;
+  }
+
+  #beforeRender() {
+    if (this.#ctx.plugins && this.#ctx.plugins.length > 0) {
+      this.#ctx.plugins.forEach((plugin: ClientPlugin) => {
+        plugin.beforeRender(this.#ctx);
+      });
+    }
   }
 }

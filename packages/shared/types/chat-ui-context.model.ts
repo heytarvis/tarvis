@@ -1,8 +1,9 @@
-import { Thread } from './conversations';
+import { Thread } from '../../client/src/types/conversations';
 import { Signal } from '@preact/signals';
-import { AssistantMessage } from './conversations';
-import { CustomComponentFns } from './app';
-import { ModelInfo } from '@tarvis/shared/src';
+import { AssistantMessage } from '../../client/src/types/conversations';
+import { CustomComponentFns } from '../../client/src/types/app';
+import { ModelInfo } from 'packages/shared/src';
+import { ClientPlugin } from "../src/types/client-plugin";
 
 export type ChatUiContext = {
   endpoint: string;
@@ -15,4 +16,5 @@ export type ChatUiContext = {
   model: Signal<string>;
   availableModels: Signal<ModelInfo[]>;
   customComponents: CustomComponentFns;
+  plugins?: Signal<ClientPlugin[]>;
 };

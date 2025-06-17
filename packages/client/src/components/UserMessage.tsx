@@ -1,4 +1,4 @@
-import { ChatUiContext } from '../types/chat-ui-context.model';
+import { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
 import {useEffect, useState} from 'preact/hooks';
 import type { UserMessage } from '../types/conversations';
 import {randomStringId} from "../utils";
@@ -6,10 +6,6 @@ import {randomStringId} from "../utils";
 const MessageContent = ({
   contentToShow,
 }: {
-  content: string[];
-  messageId: string;
-  messageVersions: { [key: string]: number };
-  ctx: ChatUiContext;
   contentToShow: string;
 }) => {
   return (
@@ -62,10 +58,6 @@ export default function UserMessage({ message, messageVersions, ctx }: UserMessa
           <div className="tarvis__avatar">U</div>
           <div className="tarvis__message-content">
             <MessageContent
-              content={message.content}
-              messageId={message.id}
-              messageVersions={messageVersions}
-              ctx={ctx}
               contentToShow={contentToShow}
             />
             <div className="tarvis__message-actions">

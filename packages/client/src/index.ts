@@ -12,5 +12,5 @@ export type { CustomComponentFn } from './types/app';
 export type { CustomComponentName } from './types/app';
 export { createChatUIContext } from './factory';
 export type { ChatUiConfig } from './types/chat-ui-config.model';
-export type { ChatUiContext } from './types/chat-ui-context.model';
+export type { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
 export { ChatUI } from './chat-ui.app';

@@ -1,4 +1,4 @@
-import { ChatUiContext } from '../types/chat-ui-context.model';
+import { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
 import { useState, useEffect } from 'preact/hooks';
 import type { AssistantMessage } from '../types/conversations';
 import { randomStringId } from '../utils';

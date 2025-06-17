@@ -1,4 +1,4 @@
-import { ChatUiContext } from '../types/chat-ui-context.model';
+import { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
 import { useState, useRef, useEffect } from 'preact/hooks';
 import type { KeyboardEvent, ChangeEvent } from 'preact/compat';
 import { useComputed } from '@preact/signals';
