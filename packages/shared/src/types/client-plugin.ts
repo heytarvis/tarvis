@@ -1,5 +1,5 @@
-import { ChatUiContext } from "./chat-ui-context.model";
-import { AssistantMessage, Thread } from "./conversations";
+import { ChatUiContext } from './chat-ui-context.model';
+import { AssistantMessage, Thread } from './conversations';
 
 export interface ClientPlugin {
   name: string;

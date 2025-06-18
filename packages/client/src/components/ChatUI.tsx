@@ -2,7 +2,12 @@ import { useState, useRef, useEffect } from 'preact/hooks';
 import type { KeyboardEvent, ChangeEvent } from 'preact/compat';
 import { useComputed } from '@preact/signals';
 import { convertToLangChainMessages } from '../services/langchain-service';
-import { AssistantMessage, SystemMessage, Thread, UserMessage } from '@tarvis/shared/src/types/conversations';
+import {
+  AssistantMessage,
+  SystemMessage,
+  Thread,
+  UserMessage,
+} from '@tarvis/shared/src/types/conversations';
 import { ChatResponse } from '@tarvis/shared/src';
 import { Model } from '@tarvis/shared/src/available-models';
 import AssistantMessageComponent from './AssistantMessage';
@@ -10,7 +15,7 @@ import UserMessageComponent from './UserMessage';
 import ModelSelector from './ModelSelector';
 import ModelSettings from './ModelSettings';
 import { randomStringId } from '../utils';
-import {ChatUiContext} from "@tarvis/shared/src/types/chat-ui-context.model";
+import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 
 type ChatUIProps = {
   ctx: ChatUiContext;
@@ -284,7 +289,7 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
               if (plugin.onMessageComplete) {
                 plugin.onMessageComplete(targetMessage as AssistantMessage, ctx.threads.value);
               }
-            })
+            });
           } else if (data.type === 'error') {
             console.error('Error:', data.error);
             setErrorMessage(data.error || 'Something went wrong');
@@ -409,15 +414,12 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
               }
             } else if (data.type === 'complete') {
               setIsLoading(false);
-              console.log('0')
 
               ctx.plugins.value?.forEach(plugin => {
-                console.log(1)
                 if (plugin.onMessageComplete) {
-                  console.log(2)
                   plugin.onMessageComplete(message, ctx.threads.value);
                 }
-              })
+              });
 
               if (ctx.onMessageComplete.value && ctx.currentThread.value) {
                 const targetMessage = ctx.currentThread.value.messages.find(

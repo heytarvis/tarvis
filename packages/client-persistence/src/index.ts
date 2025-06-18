@@ -1,7 +1,6 @@
-import {ClientPlugin} from "@tarvis/shared/src/types/client-plugin";
-import {ChatUiContext} from "@tarvis/shared/src/types/chat-ui-context.model";
-import {effect} from "@preact/signals";
-import {AssistantMessage, Thread} from "@tarvis/shared/src/types/conversations";
+import { ClientPlugin } from '@tarvis/shared/src/types/client-plugin';
+import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
+import { AssistantMessage, Thread } from '@tarvis/shared/src/types/conversations';
 
 const DB_NAME = 'chatkit_db';
 const STORE_NAME = 'travis_threads';
@@ -27,17 +26,17 @@ class DatabaseManager {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
 
-      request.onerror = (event) => {
+      request.onerror = event => {
         console.error('Error opening IndexedDB:', event);
         reject(request.error);
       };
 
-      request.onsuccess = (event) => {
+      request.onsuccess = event => {
         this.db = (event.target as IDBOpenDBRequest).result;
         resolve();
       };
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result;
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           db.createObjectStore(STORE_NAME);
@@ -88,7 +87,6 @@ export class PersistencePlugin implements ClientPlugin {
   onMessageComplete(message: AssistantMessage, threads?: Thread[]): void {
     if (!threads || threads.length === 0) return;
 
-    console.log('saves threads to IndexedDB', threads);
     this.saveThreads(threads);
   }
 

@@ -2,7 +2,7 @@ import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 import { createElement, render } from 'preact';
 import ChatUIComponent from './components/ChatUI';
 import { CustomComponentFn, CustomComponentFns } from './types/app';
-import {ClientPlugin} from "@tarvis/shared/src/types/client-plugin";
+import { ClientPlugin } from '@tarvis/shared/src/types/client-plugin';
 
 export class ChatUI {
   #ctx: ChatUiContext;
@@ -39,9 +39,7 @@ export class ChatUI {
   async #beforeRender() {
     if (this.#ctx.plugins?.value && this.#ctx.plugins.value.length > 0) {
       await Promise.all(
-        this.#ctx.plugins.value.map((plugin: ClientPlugin) => 
-          plugin.beforeRender?.(this.#ctx)
-        )
+        this.#ctx.plugins.value.map((plugin: ClientPlugin) => plugin.beforeRender?.(this.#ctx))
       );
     }
   }

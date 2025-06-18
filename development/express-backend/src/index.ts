@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { TarvisClient, model_gpt_4 } from '../../../packages/server/src/index.js';
-import { ChatResponse } from '@tarvis/shared/src/index.js';
 import { mockGpt35Model } from './mockModels.js';
 import { Readable } from 'node:stream';
 
