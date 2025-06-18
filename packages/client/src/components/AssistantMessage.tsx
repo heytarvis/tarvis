@@ -2,13 +2,16 @@ import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 import { useState, useEffect } from 'preact/hooks';
 import type { AssistantMessage } from '@tarvis/shared/src/types/conversations';
 import { randomStringId } from '../utils';
+import { Remarkable } from 'remarkable';
 
 const MessageContent = ({ contentToShow }: { contentToShow: string }) => {
+  const remarkable = new Remarkable()
+
   return (
     <div className="flex flex-col gap-2">
       <div
         className="prose prose-sm max-w-none dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: contentToShow }}
+        dangerouslySetInnerHTML={{ __html: remarkable.render(contentToShow) }}
       />
     </div>
   );

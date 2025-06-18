@@ -34,9 +34,11 @@
     "preact": "^10.19.2",
     "@langchain/core": "^0.3.57",
     "@langchain/openai": "^0.5.11",
-    "langchain": "^0.3.27"
+    "langchain": "^0.3.27",
+    "remarkable": "^2.0.1"
   },
   "devDependencies": {
-    "@tarvis/shared": "workspace:*"
+    "@tarvis/shared": "workspace:*",
+    "@types/remarkable": "^2.0.8"
   }
 }

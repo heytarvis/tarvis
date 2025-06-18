@@ -9,6 +9,7 @@ export interface ChatUiConfig {
   theme?: 'light' | 'dark';
   onMessageComplete?: (message: AssistantMessage, thread?: Thread) => void;
   systemPrompt?: string;
+  useDefaultSystemPrompt?: boolean;
   temperature?: number;
   model?: (typeof Model)[keyof typeof Model] | string;
   availableModels?: ModelInfo[];
