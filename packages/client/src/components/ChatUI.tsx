@@ -36,6 +36,12 @@ const MessageSkeleton = () => (
   </div>
 );
 
+const TitleSkeleton = () => (
+  <div className="tarvis__title-skeleton">
+    <div className="tarvis__skeleton-title"></div>
+  </div>
+);
+
 type ChatUIProps = {
   ctx: ChatUiContext;
 };
@@ -603,7 +609,11 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
               </svg>
             </button>
           )}
-          <h2>{ctx.currentThread.value?.title || 'New Chat'}</h2>
+          {ctx.isLoading.value ? (
+            <TitleSkeleton />
+          ) : (
+            <h2>{ctx.currentThread.value?.title || 'New Chat'}</h2>
+          )}
           <div className="tarvis__model-controls">
             <ModelSelector
               models={ctx.availableModels.value}

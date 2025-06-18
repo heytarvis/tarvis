@@ -63,6 +63,15 @@
         width: 60%;
       }
     }
+
+    &-title {
+      width: 200px;
+      height: 24px;
+      background: linear-gradient(90deg, var(--tarvis-skeleton-start) 25%, var(--tarvis-skeleton-mid) 50%, var(--tarvis-skeleton-start) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
   }
 }
 
@@ -71,6 +80,14 @@
   gap: 12px;
   padding: 16px;
   margin-bottom: 16px;
+}
+
+.tarvis__title-skeleton {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 16px;
 }
 
 @keyframes shimmer {
