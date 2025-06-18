@@ -1,0 +1,38 @@
+{
+  "name": "@tarvis/client-persistence",
+  "type": "module",
+  "version": "0.1.0-beta.8",
+  "description": "Frontend persistence package for Tarvis AI chat component",
+  "author": {
+    "name": "Tom Österlund",
+    "email": "tom@schedule-x.dev",
+    "url": "https://github.com/tomosterlund"
+  },
+  "license": "MIT",
+  "keywords": [
+    "Chat assistant UI"
+  ],
+  "exports": {
+    ".": {
+      "types": {
+        "import": "./dist/index.d.mts",
+        "require": "./dist/index.d.ts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./dist/index.css": "./dist/index.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "peerDependencies": {
+    "@preact/signals": "^1.2.2"
+  },
+  "devDependencies": {
+    "@tarvis/shared": "workspace:*"
+  }
+}

@@ -1,22 +1,10 @@
-import { ChatUiContext } from '../types/chat-ui-context.model';
-import {useEffect, useState} from 'preact/hooks';
-import type { UserMessage } from '../types/conversations';
-import {randomStringId} from "../utils";
+import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
+import { useEffect, useState } from 'preact/hooks';
+import type { UserMessage } from '@tarvis/shared/src/types/conversations';
+import { randomStringId } from '../utils';
 
-const MessageContent = ({
-  contentToShow,
-}: {
-  content: string[];
-  messageId: string;
-  messageVersions: { [key: string]: number };
-  ctx: ChatUiContext;
-  contentToShow: string;
-}) => {
-  return (
-    <div className="whitespace-pre-wrap">
-      {contentToShow}
-    </div>
-  );
+const MessageContent = ({ contentToShow }: { contentToShow: string }) => {
+  return <div className="whitespace-pre-wrap">{contentToShow}</div>;
 };
 
 type UserMessageProps = {
@@ -51,8 +39,8 @@ export default function UserMessage({ message, messageVersions, ctx }: UserMessa
     if (!(containerEl instanceof HTMLElement)) return;
 
     customComponentFn(containerEl, {
-      message
-    })
+      message,
+    });
   }, [message]);
 
   return (
@@ -61,13 +49,7 @@ export default function UserMessage({ message, messageVersions, ctx }: UserMessa
         <div className="tarvis__message-inner">
           <div className="tarvis__avatar">U</div>
           <div className="tarvis__message-content">
-            <MessageContent
-              content={message.content}
-              messageId={message.id}
-              messageVersions={messageVersions}
-              ctx={ctx}
-              contentToShow={contentToShow}
-            />
+            <MessageContent contentToShow={contentToShow} />
             <div className="tarvis__message-actions">
               <button
                 className="tarvis__action-button"

@@ -307,7 +307,7 @@ const mockConversations: MockResponse[][] = [
 ];
 
 export const mockGpt35Model: CustomModelInstance = {
-  stream: async function* (messages) {
+  stream: async function* () {
     // Randomly select a conversation
     const selectedConversation =
       mockConversations[Math.floor(Math.random() * mockConversations.length)];
@@ -324,7 +324,7 @@ export const mockGpt35Model: CustomModelInstance = {
     };
   },
 
-  invoke: async messages => {
+  invoke: async () => {
     // Randomly select a conversation and return the first response
     const selectedConversation =
       mockConversations[Math.floor(Math.random() * mockConversations.length)];
