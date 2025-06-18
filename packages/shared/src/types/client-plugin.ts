@@ -1,8 +1,11 @@
-import {ChatUiContext} from "../../types/chat-ui-context.model";
+import { ChatUiContext } from "./chat-ui-context.model";
+import { AssistantMessage, Thread } from "./conversations";
 
 export interface ClientPlugin {
   name: string;
-  beforeRender(ctx: ChatUiContext): void;
-  onRender(ctx: ChatUiContext): void;
-  destroy(): void;
+
+  destroy: () => void;
+  beforeRender?: (ctx: ChatUiContext) => void;
+  onRender?: (ctx: ChatUiContext) => void;
+  onMessageComplete?: (message: AssistantMessage, threads?: Thread[]) => void;
 }

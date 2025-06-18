@@ -1,6 +1,6 @@
 import { ChatUiConfig } from './types/chat-ui-config.model';
 import { signal } from '@preact/signals';
-import { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
+import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 import { model_gpt_3_5_turbo } from '@tarvis/shared/src/available-models';
 
 export const createChatUIContext = (config: ChatUiConfig): ChatUiContext => {

@@ -1,6 +1,6 @@
-import { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
+import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 import { useState, useEffect } from 'preact/hooks';
-import type { AssistantMessage } from '../types/conversations';
+import type { AssistantMessage } from '@tarvis/shared/src/types/conversations';
 import { randomStringId } from '../utils';
 
 const MessageContent = ({ contentToShow }: { contentToShow: string }) => {

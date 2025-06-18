@@ -29,6 +29,9 @@
   "scripts": {
     "build": "rollup -c"
   },
+  "peerDependencies": {
+    "@preact/signals": "^1.2.2"
+  },
   "devDependencies": {
     "@tarvis/shared": "workspace:*"
   }

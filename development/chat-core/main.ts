@@ -11,8 +11,9 @@ import '@fontsource/open-sans/300.css';
 import '@fontsource/open-sans/500-italic.css';
 import '@fontsource/open-sans/700.css';
 import '@fontsource/open-sans/700-italic.css';
-import { Thread, AssistantMessage } from '../../packages/client/src/types/conversations';
+import { Thread, AssistantMessage } from '../../packages/shared/src/types/conversations';
 import { ChatUiConfig } from '../../packages/client/src/types/chat-ui-config.model';
+import PersistencePlugin from "../../packages/client-persistence/src";
 
 const appEl = document.getElementById('app');
 
@@ -102,10 +103,13 @@ const config: ChatUiConfig = {
     model_llama_3_3_70b_versatile,
   ],
   model: 'mock-gpt-3.5',
+  plugins: [
+    new PersistencePlugin()
+  ]
 };
 
 const ctx = createChatUIContext(config);
-ctx.threads.value = sampleConversations;
+// ctx.threads.value = sampleConversations;
 ctx.theme.value = 'light';
 
 const chatUI = new ChatUI(ctx);

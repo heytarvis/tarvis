@@ -121,6 +121,10 @@ importers:
         version: link:../shared
 
   packages/client-persistence:
+    dependencies:
+      '@preact/signals':
+        specifier: ^1.2.2
+        version: 1.3.2(preact@10.26.8)
     devDependencies:
       '@tarvis/shared':
         specifier: workspace:*
@@ -160,7 +164,11 @@ importers:
         specifier: ^8.18.1
         version: 8.18.1
 
-  packages/shared: {}
+  packages/shared:
+    dependencies:
+      '@preact/signals':
+        specifier: 2.2.0
+        version: 2.2.0(preact@10.26.8)
 
 packages:
 
@@ -661,6 +669,11 @@ packages:
 
   '@preact/signals-core@1.9.0':
     resolution: {integrity: sha512-uUgFHJLWxb33rfCtb1g+1e3Rg7Jl5EALhGTHlQ5Y0w37OF+fdidYdYEE6crbpUOYDOjlmelIWf0ulXr1ggfUkg==}
+
+  '@preact/signals@1.3.2':
+    resolution: {integrity: sha512-naxcJgUJ6BTOROJ7C3QML7KvwKwCXQJYTc5L/b0eEsdYgPB6SxwoQ1vDGcS0Q7GVjAenVq/tXrybVdFShHYZWg==}
+    peerDependencies:
+      preact: 10.x
 
   '@preact/signals@2.2.0':
     resolution: {integrity: sha512-P3KPcEYyVk9Wiwfw68QQzRpPkt0H+zjfH3X4AaGCDlc86GuRBYFGiAxT1nC5F5qlsVIEmjNJ9yVYe7C91z3L+g==}
@@ -2946,6 +2959,11 @@ snapshots:
     optional: true
 
   '@preact/signals-core@1.9.0': {}
+
+  '@preact/signals@1.3.2(preact@10.26.8)':
+    dependencies:
+      '@preact/signals-core': 1.9.0
+      preact: 10.26.8
 
   '@preact/signals@2.2.0(preact@10.26.8)':
     dependencies:

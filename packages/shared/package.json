@@ -11,5 +11,8 @@
   "license": "MIT",
   "keywords": [
     "Chat assistant UI"
-  ]
+  ],
+  "peerDependencies": {
+    "@preact/signals": "2.2.0"
+  }
 }

@@ -1,4 +1,4 @@
-import { Thread } from '../types/conversations';
+import { Thread } from '@tarvis/shared/src/types/conversations';
 import { LangChainMessage } from '../../../shared/src';
 
 export function convertToLangChainMessages(thread: Thread): LangChainMessage[] {

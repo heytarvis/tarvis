@@ -1,9 +1,9 @@
-import { Thread } from '../../client/src/types/conversations';
+import { Thread } from './conversations';
 import { Signal } from '@preact/signals';
-import { AssistantMessage } from '../../client/src/types/conversations';
-import { CustomComponentFns } from '../../client/src/types/app';
-import { ModelInfo } from 'packages/shared/src';
-import { ClientPlugin } from "../src/types/client-plugin";
+import { AssistantMessage } from './conversations';
+import { CustomComponentFns } from '../../../client/src/types/app';
+import { ClientPlugin } from "./client-plugin";
+import {ModelInfo} from "../index";
 
 export type ChatUiContext = {
   endpoint: string;
@@ -16,5 +16,5 @@ export type ChatUiContext = {
   model: Signal<string>;
   availableModels: Signal<ModelInfo[]>;
   customComponents: CustomComponentFns;
-  plugins?: Signal<ClientPlugin[]>;
+  plugins: Signal<ClientPlugin[]>;
 };

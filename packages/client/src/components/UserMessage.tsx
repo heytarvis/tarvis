@@ -1,6 +1,6 @@
-import { ChatUiContext } from '@tarvis/shared/types/chat-ui-context.model';
+import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 import {useEffect, useState} from 'preact/hooks';
-import type { UserMessage } from '../types/conversations';
+import type { UserMessage } from '@tarvis/shared/src/types/conversations';
 import {randomStringId} from "../utils";
 
 const MessageContent = ({
