@@ -1,10 +1,11 @@
 @use 'colors';
 @use 'layout';
+@use 'chat-area';
+@use 'input';
+@use 'messages';
 @use 'model-selector';
 @use 'model-settings';
-@use 'chat-area';
-@use 'messages';
-@use 'input';
+@use 'skeleton';
 
 @keyframes typing {
   0%,

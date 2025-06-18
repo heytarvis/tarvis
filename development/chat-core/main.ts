@@ -84,6 +84,7 @@ const sampleConversations: Thread[] = [
 ];
 
 const config: ChatUiConfig = {
+  isLoading: true,
   endpoint: 'http://localhost:3001/chat',
   theme: 'light',
   onMessageComplete: (message: AssistantMessage, conversation?: Thread) => {
@@ -110,3 +111,7 @@ ctx.theme.value = 'light';
 
 const chatUI = new ChatUI(ctx);
 chatUI.render(appEl);
+
+setTimeout(() => {
+  ctx.isLoading.value = false;
+}, 1800)

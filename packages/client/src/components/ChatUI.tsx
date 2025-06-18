@@ -17,6 +17,25 @@ import ModelSettings from './ModelSettings';
 import { randomStringId } from '../utils';
 import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 
+// Skeleton components
+const ThreadSkeleton = () => (
+  <div className="tarvis__conversation-item tarvis__conversation-item--skeleton">
+    <div className="tarvis__skeleton-icon"></div>
+    <div className="tarvis__skeleton-text"></div>
+  </div>
+);
+
+const MessageSkeleton = () => (
+  <div className="tarvis__message-skeleton">
+    <div className="tarvis__skeleton-avatar"></div>
+    <div className="tarvis__skeleton-content">
+      <div className="tarvis__skeleton-line"></div>
+      <div className="tarvis__skeleton-line"></div>
+      <div className="tarvis__skeleton-line"></div>
+    </div>
+  </div>
+);
+
 type ChatUIProps = {
   ctx: ChatUiContext;
 };
@@ -519,35 +538,46 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
           New Chat
         </button>
         <div className="tarvis__conversations">
-          {groupThreadsByMonth.value.map(([month, threads]) => (
-            <div key={month} className="tarvis__conversation-group">
-              <div className="tarvis__conversation-month">{month}</div>
-              {threads.map(thread => (
-                <div
-                  key={thread.id}
-                  className={`tarvis__conversation-item ${thread.id === ctx.currentThread.value?.id ? 'tarvis__conversation-item--active' : ''}`}
-                  onClick={() => {
-                    ctx.currentThread.value = thread;
-                    if (isSmallScreen) {
-                      setIsSidebarOpen(false);
-                    }
-                  }}
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+          {ctx.isLoading.value ? (
+            <>
+              <div className="tarvis__conversation-group">
+                <div className="tarvis__conversation-month">Loading...</div>
+                {[1, 2, 3].map(i => (
+                  <ThreadSkeleton key={i} />
+                ))}
+              </div>
+            </>
+          ) : (
+            groupThreadsByMonth.value.map(([month, threads]) => (
+              <div key={month} className="tarvis__conversation-group">
+                <div className="tarvis__conversation-month">{month}</div>
+                {threads.map(thread => (
+                  <div
+                    key={thread.id}
+                    className={`tarvis__conversation-item ${thread.id === ctx.currentThread.value?.id ? 'tarvis__conversation-item--active' : ''}`}
+                    onClick={() => {
+                      ctx.currentThread.value = thread;
+                      if (isSmallScreen) {
+                        setIsSidebarOpen(false);
+                      }
+                    }}
                   >
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  </svg>
-                  {thread.title}
-                </div>
-              ))}
-            </div>
-          ))}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    {thread.title}
+                  </div>
+                ))}
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -620,28 +650,36 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
               </button>
             </div>
           )}
-          {ctx.currentThread.value?.messages
-            .filter(message => message.type !== 'system')
-            .map(message =>
-              message.type === 'assistant' ? (
-                <AssistantMessageComponent
-                  key={message.id}
-                  message={message as AssistantMessage}
-                  isLoading={isLoading}
-                  messageVersions={messageVersions}
-                  ctx={ctx}
-                  onVersionChange={handleVersionChange}
-                  onRetry={retryMessage}
-                />
-              ) : (
-                <UserMessageComponent
-                  key={message.id}
-                  message={message as UserMessage}
-                  messageVersions={messageVersions}
-                  ctx={ctx}
-                />
+          {ctx.isLoading.value ? (
+            <>
+              <MessageSkeleton />
+              <MessageSkeleton />
+              <MessageSkeleton />
+            </>
+          ) : (
+            ctx.currentThread.value?.messages
+              .filter(message => message.type !== 'system')
+              .map(message =>
+                message.type === 'assistant' ? (
+                  <AssistantMessageComponent
+                    key={message.id}
+                    message={message as AssistantMessage}
+                    isLoading={isLoading}
+                    messageVersions={messageVersions}
+                    ctx={ctx}
+                    onVersionChange={handleVersionChange}
+                    onRetry={retryMessage}
+                  />
+                ) : (
+                  <UserMessageComponent
+                    key={message.id}
+                    message={message as UserMessage}
+                    messageVersions={messageVersions}
+                    ctx={ctx}
+                  />
+                )
               )
-            )}
+          )}
           <div ref={messagesEndRef} />
         </div>
 

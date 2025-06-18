@@ -25,5 +25,6 @@ export const createChatUIContext = (config: ChatUiConfig): ChatUiContext => {
     model: signal(config.model || 'gpt-3.5-turbo'),
     availableModels: signal(config.availableModels || [model_gpt_3_5_turbo]),
     plugins: signal(config.plugins || []),
+    isLoading: signal(config.isLoading || false),
   };
 };

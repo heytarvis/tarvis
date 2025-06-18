@@ -14,4 +14,5 @@ export interface ChatUiConfig {
   model?: (typeof Model)[keyof typeof Model] | string;
   availableModels?: ModelInfo[];
   plugins?: ClientPlugin[];
+  isLoading?: boolean;
 }

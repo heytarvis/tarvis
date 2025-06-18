@@ -17,6 +17,10 @@
   --tarvis-button-active: #e2e8f0;
   --tarvis-scrollbar-thumb: #cbd5e0;
   --tarvis-scrollbar-track: #f7f7f8;
+
+  // Skeleton colors
+  --tarvis-skeleton-start: #f0f0f0;
+  --tarvis-skeleton-mid: #e0e0e0;
 }
 
 .is-dark {
@@ -37,4 +41,10 @@
   --tarvis-button-active: #4a5568;
   --tarvis-scrollbar-thumb: #4a5568;
   --tarvis-scrollbar-track: #2d3748;
+}
+
+.tarvis__layout.is-dark {
+  // Dark theme skeleton colors
+  --tarvis-skeleton-start: #2a2a2a;
+  --tarvis-skeleton-mid: #3a3a3a;
 }

@@ -17,4 +17,5 @@ export type ChatUiContext = {
   availableModels: Signal<ModelInfo[]>;
   customComponents: CustomComponentFns;
   plugins: Signal<ClientPlugin[]>;
+  isLoading: Signal<boolean>;
 };
