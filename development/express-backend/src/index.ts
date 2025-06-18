@@ -12,15 +12,15 @@ const app = express();
 
 // Create TarvisClient instance
 const tarvisClient = new TarvisClient({
-  availableModels: [
-    model_gpt_4,
-    {
-      name: 'Mock GPT-3.5',
-      description: 'Mock model simulating GPT-3.5 capabilities',
-      id: 'mock-gpt-3.5',
-      ModelInstance: mockGpt35Model,
-    },
-  ],
+  // availableModels: [
+  //   model_gpt_4,
+  //   {
+  //     name: 'Mock GPT-3.5',
+  //     description: 'Mock model simulating GPT-3.5 capabilities',
+  //     id: 'mock-gpt-3.5',
+  //     ModelInstance: mockGpt35Model,
+  //   },
+  // ],
 });
 
 // Enable CORS

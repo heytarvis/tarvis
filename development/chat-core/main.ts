@@ -90,19 +90,17 @@ const config: ChatUiConfig = {
     console.log('Message completed:', message);
     console.log('Current conversation:', conversation);
   },
-  systemPrompt:
-    'You are a helpful AI assistant. You can use HTML formatting in your responses to create well-structured and visually appealing messages. You can use tags like <h1>, <h2>, <h3> for headings, <ul> and <ol> for lists, <li> for list items, <p> for paragraphs, <strong> and <em> for emphasis, <code> for code snippets, and <pre> for preformatted text. Always ensure your HTML is properly formatted and closed. Use appropriate spacing and structure to make the content easy to read.',
   temperature: 0.5,
   // availableModels: [model_llama_3_3_70b_versatile, model_gpt_3_5_turbo, model_claude_3_5_sonnet],
-  availableModels: [
-    {
-      name: 'Mock GPT-3.5',
-      description: 'Mock model simulating GPT-3.5 capabilities',
-      id: 'mock-gpt-3.5',
-    },
-    model_llama_3_3_70b_versatile,
-  ],
-  model: 'mock-gpt-3.5',
+  // availableModels: [
+  //   {
+  //     name: 'Mock GPT-3.5',
+  //     description: 'Mock model simulating GPT-3.5 capabilities',
+  //     id: 'mock-gpt-3.5',
+  //   },
+  //   model_llama_3_3_70b_versatile,
+  // ],
+  // model: 'mock-gpt-3.5',
   plugins: [new PersistencePlugin()],
 };
 
