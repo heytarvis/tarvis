@@ -48,7 +48,7 @@ export interface UsageMetadata {
 }
 
 export interface ChatResponse {
-  type: 'message' | 'error' | 'complete';
+  type: 'message' | 'error' | 'complete' | 'toolRequest';
   content?: string;
   error?: string;
   threadId: string;
@@ -56,6 +56,15 @@ export interface ChatResponse {
   threadTitle?: string;
   isRetry?: boolean;
   usage_metadata?: UsageMetadata;
+  toolRequest?: {
+    toolName: string;
+    toolDescription: string;
+    inputSchema: {
+      type: 'object';
+      properties: Record<string, z.ZodSchema>;
+      required?: string[];
+    };
+  };
 }
 
 export interface BaseMetadata {

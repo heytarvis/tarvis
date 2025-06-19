@@ -92,7 +92,7 @@ const config: ChatUiConfig = {
     console.log('Current conversation:', conversation);
   },
   temperature: 0.5,
-  // availableModels: [model_llama_3_3_70b_versatile, model_gpt_3_5_turbo, model_claude_3_5_sonnet],
+  availableModels: [model_llama_3_3_70b_versatile, model_gpt_3_5_turbo, model_claude_3_5_sonnet],
   // availableModels: [
   //   {
   //     name: 'Mock GPT-3.5',

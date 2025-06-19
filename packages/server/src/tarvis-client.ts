@@ -184,6 +184,44 @@ export class TarvisClient {
             throw new Error(`Unsupported model: ${modelId}`);
           }
 
+          // Check if we have tools and if the last message is from a human
+          const lastMessage = langChainMessages[langChainMessages.length - 1];
+          const hasTools = self.tools.size > 0;
+
+          // Find the last human message instead of assuming the last message is human
+          const lastHumanMessage = langChainMessages
+            .slice()
+            .reverse()
+            .find(msg => 'type' in msg && msg.type === 'human');
+
+          if (hasTools && !!lastHumanMessage) {
+            // Check if any tools should be used
+            const toolDetectionResult = await self.detectToolUsage(langChainMessages, modelId, temperature);
+            console.log('toolDetectionResult', toolDetectionResult)
+
+            if (toolDetectionResult.shouldUseTool) {
+              const toolRequestResponse: ChatResponse = {
+                type: 'toolRequest',
+                threadId,
+                messageId,
+                isRetry,
+                toolRequest: {
+                  toolName: toolDetectionResult.toolName!,
+                  toolDescription: toolDetectionResult.toolDescription!,
+                  inputSchema: toolDetectionResult.inputSchema!,
+                },
+              };
+
+              console.log('toolRequestResponse', toolRequestResponse)
+
+              const formattedToolRequest = formatSSEMessage(toolRequestResponse);
+              controller.enqueue(encoder.encode(formattedToolRequest));
+              controller.close();
+              onComplete?.(formattedToolRequest);
+              return;
+            }
+          }
+
           const messages = langChainMessages.map(msg => {
             switch (msg.type) {
               case 'human':
@@ -259,5 +297,106 @@ export class TarvisClient {
         }
       },
     });
+  }
+
+  /**
+   * Detect if any tools should be used for the given messages
+   * @param messages The conversation messages
+   * @param modelId The model to use for detection
+   * @param temperature The temperature for detection
+   * @returns Tool detection result
+   */
+  private async detectToolUsage(
+    messages: any[],
+    modelId: string,
+    temperature: number
+  ): Promise<{
+    shouldUseTool: boolean;
+    toolName?: string;
+    toolDescription?: string;
+    inputSchema?: any;
+  }> {
+    if (this.tools.size === 0) {
+      return { shouldUseTool: false };
+    }
+
+    // Find the last human message instead of assuming the last message is human
+    const lastHumanMessage = messages
+      .slice()
+      .reverse()
+      .find(msg => 'type' in msg && msg.type === 'human');
+
+    if (!lastHumanMessage) {
+      return { shouldUseTool: false };
+    }
+
+    // Create a system prompt that lists all available tools
+    const toolsList = Array.from(this.tools.values());
+    const toolsDescription = toolsList
+      .map(tool => `- ${tool.name}: ${tool.description}`)
+      .join('\n');
+
+    const detectionPrompt = `You are a tool usage detector. You have access to the following tools:
+
+${toolsDescription}
+
+The user's latest message is: "${lastHumanMessage.content}"
+
+Analyze if any of the available tools would be useful to respond to the user's request. Consider:
+1. Does the user's request match the purpose of any tool?
+2. Would using a tool provide a better response than a regular conversation?
+
+Respond with ONLY a JSON object in this exact format:
+{
+  "shouldUseTool": true/false,
+  "toolName": "name_of_tool" (only if shouldUseTool is true),
+  "reasoning": "brief explanation of your decision"
+}
+
+If shouldUseTool is false, you can omit toolName.`;
+
+    try {
+      const detectionModel = createOrGetModel(this.availableModels, modelId, { temperature: 0.1 });
+      console.log('detectionModel', detectionModel)
+      const detectionMessages = [
+        new SystemMessage(detectionPrompt),
+        new HumanMessage(lastHumanMessage.content),
+      ];
+
+      const response = await detectionModel.invoke(detectionMessages);
+      const responseText = response.content.toString().trim();
+
+      // Try to parse the JSON response
+      let detectionResult;
+      try {
+        // Extract JSON from the response (in case there's extra text)
+        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          detectionResult = JSON.parse(jsonMatch[0]);
+        } else {
+          detectionResult = JSON.parse(responseText);
+        }
+      } catch (parseError) {
+        console.error('Failed to parse tool detection response:', parseError);
+        return { shouldUseTool: false };
+      }
+
+      if (detectionResult.shouldUseTool && detectionResult.toolName) {
+        const tool = this.tools.get(detectionResult.toolName);
+        if (tool) {
+          return {
+            shouldUseTool: true,
+            toolName: tool.name,
+            toolDescription: tool.description || '',
+            inputSchema: tool.inputSchema,
+          };
+        }
+      }
+
+      return { shouldUseTool: false };
+    } catch (error) {
+      console.error('Error during tool detection:', error);
+      return { shouldUseTool: false };
+    }
   }
 }

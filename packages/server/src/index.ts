@@ -39,3 +39,6 @@ export {
   advancedToolHandler,
   demonstrateChatWithTools,
 } from './example-usage';
+
+// Export tool endpoint
+export { createToolEndpoint } from './tool-endpoint';
