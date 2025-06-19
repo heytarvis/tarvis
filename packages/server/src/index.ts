@@ -29,18 +29,10 @@ export type {
 export {
   createTextTool,
   createMultiParamTool,
-  calculatorTool,
-  weatherTool,
-  fileOperationsTool,
-  webSearchTool,
-  toolHandlers,
-  getExampleTools,
-  getExampleToolHandlers,
 } from './mcp-tools';
 
 // Export example usage
 export {
-  createClientWithExampleTools,
   createClientWithCustomTools,
   demonstrateToolUsage,
   createAdvancedTool,

@@ -1,40 +1,19 @@
 import { TarvisClient } from './tarvis-client';
-import { 
-  getExampleTools, 
-  getExampleToolHandlers,
+import {
   createTextTool,
-  createMultiParamTool 
+  createMultiParamTool
 } from './mcp-tools';
-import { MCPTool, MCPToolUseResponse } from '@tarvis/shared/src';
+import { MCPTool, MCPCallToolResult } from '@tarvis/shared/src';
+import { z } from 'zod';
 
 /**
- * Example: Basic usage with pre-defined tools
+ * Example: Basic usage with custom tools
  */
-export function createClientWithExampleTools(): TarvisClient {
+export function createClientWithCustomTools(): TarvisClient {
   const client = new TarvisClient({
     defaultModelId: 'gpt-3.5-turbo',
     defaultTemperature: 0.7,
   });
-
-  // Add example tools with their handlers
-  const exampleTools = getExampleTools();
-  const handlers = getExampleToolHandlers();
-
-  exampleTools.forEach(tool => {
-    const handler = handlers[tool.name as keyof typeof handlers];
-    if (handler) {
-      client.addTool(tool, handler);
-    }
-  });
-
-  return client;
-}
-
-/**
- * Example: Creating custom tools
- */
-export function createClientWithCustomTools(): TarvisClient {
-  const client = new TarvisClient();
 
   // Create a simple text-based tool
   const echoTool = createTextTool(
@@ -44,36 +23,34 @@ export function createClientWithCustomTools(): TarvisClient {
     'Text to echo back'
   );
 
-  // Create a multi-parameter tool
-  const customTool = createMultiParamTool(
-    'custom_action',
-    'Perform a custom action with multiple parameters',
+  // Create a multi-parameter tool with Zod schemas
+  const calculatorTool = createMultiParamTool(
+    'calculator',
+    'Perform mathematical calculations',
     {
-      action: {
-        type: 'string',
-        description: 'Action to perform',
-        enum: ['process', 'validate', 'transform'],
-      },
-      data: {
-        type: 'string',
-        description: 'Data to process',
-      },
-      options: {
-        type: 'object',
-        description: 'Additional options',
-      },
+      expression: z.string().describe('Mathematical expression to evaluate'),
     },
-    ['action', 'data']
+    ['expression']
   );
 
   // Add custom tools with their handlers
   client.addTool(echoTool, async (args) => ({
-    content: `Echo: ${args.text}`,
+    content: [{ type: 'text', text: `Echo: ${args.text}` }],
   }));
 
-  client.addTool(customTool, async (args) => ({
-    content: `Performed ${args.action} on data: ${args.data} with options: ${JSON.stringify(args.options)}`,
-  }));
+  client.addTool(calculatorTool, async (args) => {
+    try {
+      const result = eval(args.expression as string);
+      return {
+        content: [{ type: 'text', text: `Result: ${result}` }],
+      };
+    } catch (error) {
+      return {
+        content: [{ type: 'text', text: `Error: ${error instanceof Error ? error.message : 'Unknown error'}` }],
+        isError: true,
+      };
+    }
+  });
 
   return client;
 }
@@ -82,7 +59,7 @@ export function createClientWithCustomTools(): TarvisClient {
  * Example: Using the client to list tools and execute them
  */
 export async function demonstrateToolUsage() {
-  const client = createClientWithExampleTools();
+  const client = createClientWithCustomTools();
 
   // Get list of available tools
   const toolsList = client.getToolsList();
@@ -90,17 +67,17 @@ export async function demonstrateToolUsage() {
 
   // Use a specific tool
   try {
-    const calculatorResult = await client.useTool({
+    const calculatorResult = await client.callTool({
       name: 'calculator',
       arguments: { expression: '2 + 2 * 3' }
     });
     console.log('Calculator result:', calculatorResult);
 
-    const weatherResult = await client.useTool({
-      name: 'weather',
-      arguments: { location: 'New York', units: 'fahrenheit' }
+    const echoResult = await client.callTool({
+      name: 'echo',
+      arguments: { text: 'Hello, World!' }
     });
-    console.log('Weather result:', weatherResult);
+    console.log('Echo result:', echoResult);
 
   } catch (error) {
     console.error('Error using tool:', error);
@@ -117,23 +94,10 @@ export function createAdvancedTool(): MCPTool {
     inputSchema: {
       type: 'object',
       properties: {
-        operation: {
-          type: 'string',
-          description: 'Operation to perform',
-          enum: ['filter', 'sort', 'aggregate', 'transform'],
-        },
-        data: {
-          type: 'array',
-          description: 'Array of data items to process',
-        },
-        criteria: {
-          type: 'object',
-          description: 'Processing criteria',
-        },
-        options: {
-          type: 'object',
-          description: 'Additional processing options',
-        },
+        operation: z.enum(['filter', 'sort', 'aggregate', 'transform']).describe('Operation to perform'),
+        data: z.array(z.any()).describe('Array of data items to process'),
+        criteria: z.object({}).describe('Processing criteria'),
+        options: z.object({}).describe('Additional processing options'),
       },
       required: ['operation', 'data'],
     },
@@ -143,7 +107,7 @@ export function createAdvancedTool(): MCPTool {
 /**
  * Example: Tool handler with complex logic
  */
-export async function advancedToolHandler(args: Record<string, any>): Promise<MCPToolUseResponse> {
+export async function advancedToolHandler(args: Record<string, any>): Promise<MCPCallToolResult> {
   const { operation, data, criteria, options } = args;
 
   try {
@@ -179,12 +143,12 @@ export async function advancedToolHandler(args: Record<string, any>): Promise<MC
     }
 
     return {
-      content: JSON.stringify(result),
+      content: [{ type: 'text', text: JSON.stringify(result) }],
     };
   } catch (error) {
     return {
-      content: `Error processing data: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      is_error: true,
+      content: [{ type: 'text', text: `Error processing data: ${error instanceof Error ? error.message : 'Unknown error'}` }],
+      isError: true,
     };
   }
 }
@@ -193,7 +157,7 @@ export async function advancedToolHandler(args: Record<string, any>): Promise<MC
  * Example: Integration with chat response
  */
 export async function demonstrateChatWithTools() {
-  const client = createClientWithExampleTools();
+  const client = createClientWithCustomTools();
 
   // Simulate a chat request that might trigger tool usage
   const chatRequest = {
@@ -210,10 +174,10 @@ export async function demonstrateChatWithTools() {
 
   // In a real implementation, the model would decide to use tools
   // Here we demonstrate manual tool usage
-  const calculationResult = await client.useTool({
+  const calculationResult = await client.callTool({
     name: 'calculator',
     arguments: { expression: '15 * 23' }
   });
 
   console.log('Tool result for chat:', calculationResult);
-} 
+}

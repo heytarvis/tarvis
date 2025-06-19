@@ -1,5 +1,6 @@
 import { LangChainMessage } from './types/langchain';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
+import { z } from 'zod';
 
 export type { LangChainMessage } from './types/langchain';
 
@@ -67,7 +68,7 @@ export interface MCPTool extends BaseMetadata {
   description?: string;
   inputSchema: {
     type: 'object';
-    properties: Record<string, object>;
+    properties: Record<string, z.ZodSchema>;
     required?: string[];
   };
 }
