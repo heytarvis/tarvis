@@ -56,3 +56,40 @@ export interface ChatResponse {
   isRetry?: boolean;
   usage_metadata?: UsageMetadata;
 }
+
+export interface BaseMetadata {
+  name: string;
+  title?: string;
+}
+
+export interface MCPTool extends BaseMetadata {
+  name: string;
+  description?: string;
+  inputSchema: {
+    type: 'object';
+    properties: Record<string, object>;
+    required?: string[];
+  };
+}
+
+export interface MCPCallToolRequest {
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+export interface TextContent {
+  type: "text";
+  text: string;
+}
+
+export type ContentBlock =
+  | TextContent;
+
+export interface MCPCallToolResult {
+  content: ContentBlock[];
+  isError?: boolean;
+}
+
+export interface MCPToolsListResponse {
+  tools: MCPTool[];
+}
