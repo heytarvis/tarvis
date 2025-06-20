@@ -14,7 +14,6 @@ export function createToolEndpoint(options: ToolEndpointOptions) {
 
       // Execute the tool
       const result = await client.callTool(body);
-      console.log(result);
 
       return new Response(JSON.stringify(result), {
         status: 200,

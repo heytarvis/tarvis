@@ -112,8 +112,6 @@ export default function ToolConfirmationModal({
       inputProps.options = (zodSchemaDef as z.ZodEnumDef).values;
     }
 
-    console.log(inputType);
-
     return (
       <div key={key} className="tarvis__tool-parameter">
         <label className="tarvis__tool-parameter-label">

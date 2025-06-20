@@ -366,7 +366,6 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
               ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1]
                 .content[0] === ''
             ) {
-              console.log('remove assistant placeholder');
               ctx.currentThread.value.messages.pop();
             }
 

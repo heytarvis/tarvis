@@ -206,7 +206,6 @@ export class TarvisClient {
               modelId,
               temperature
             );
-            console.log('toolDetectionResult', toolDetectionResult);
 
             if (toolDetectionResult.shouldUseTool) {
               const toolRequestResponse: ChatResponse = {
