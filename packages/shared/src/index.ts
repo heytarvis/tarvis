@@ -1,6 +1,5 @@
 import { LangChainMessage } from './types/langchain';
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { z } from 'zod';
 
 export type { LangChainMessage } from './types/langchain';
 
