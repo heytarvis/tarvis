@@ -212,8 +212,6 @@ export class TarvisClient {
                 },
               };
 
-              console.log('toolRequestResponse', toolRequestResponse)
-
               const formattedToolRequest = formatSSEMessage(toolRequestResponse);
               controller.enqueue(encoder.encode(formattedToolRequest));
               controller.close();
@@ -357,7 +355,6 @@ If shouldUseTool is false, you can omit toolName.`;
 
     try {
       const detectionModel = createOrGetModel(this.availableModels, modelId, { temperature: 0.1 });
-      console.log('detectionModel', detectionModel)
       const detectionMessages = [
         new SystemMessage(detectionPrompt),
         new HumanMessage(lastHumanMessage.content),
