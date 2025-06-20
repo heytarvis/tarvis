@@ -16,6 +16,7 @@ export const createChatUIContext = (config: ChatUiConfig): ChatUiContext => {
 
   return {
     endpoint: config.endpoint,
+    callToolEndpoint: config.callToolEndpoint || undefined,
     threads: signal(config.threads || []),
     theme: signal(config.theme || 'light'),
     currentThread: signal(null),

@@ -149,15 +149,14 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
   };
 
   const handleToolConfirm = async (parameters: Record<string, any>) => {
-    if (!toolRequest) return;
+    if (!toolRequest || !ctx.callToolEndpoint) return;
 
     setToolRequest(null);
     setIsLoading(true);
 
     try {
       // Call the tool with the provided parameters
-      // TODO: REPLACE WITH toolEndpoint
-      const response = await fetch(`http://localhost:3001/tool`, {
+      const response = await fetch(ctx.callToolEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

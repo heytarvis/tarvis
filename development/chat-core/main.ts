@@ -86,6 +86,7 @@ const sampleConversations: Thread[] = [
 const config: ChatUiConfig = {
   isLoading: true,
   endpoint: 'http://localhost:3001/chat',
+  callToolEndpoint: 'http://localhost:3001/tool',
   theme: 'light',
   onMessageComplete: (message: AssistantMessage, conversation?: Thread) => {
     console.log('Message completed:', message);

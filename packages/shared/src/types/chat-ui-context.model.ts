@@ -7,6 +7,7 @@ import { ModelInfo } from '../index';
 
 export type ChatUiContext = {
   endpoint: string;
+  callToolEndpoint: string | undefined;
   threads: Signal<Thread[]>;
   currentThread: Signal<Thread | null>;
   theme: Signal<'light' | 'dark'>;

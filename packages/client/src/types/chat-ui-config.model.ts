@@ -5,6 +5,7 @@ import { ClientPlugin } from '@tarvis/shared/src/types/client-plugin';
 
 export interface ChatUiConfig {
   endpoint: string;
+  callToolEndpoint?: string;
   threads?: Thread[];
   theme?: 'light' | 'dark';
   onMessageComplete?: (message: AssistantMessage, thread?: Thread) => void;
