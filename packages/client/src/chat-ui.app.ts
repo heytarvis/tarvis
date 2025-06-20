@@ -13,7 +13,7 @@ export class ChatUI {
   }
 
   async render(el: HTMLElement): Promise<void> {
-    await this.#beforeRender();
+    await this.beforeRender();
 
     this.preactRoot = document.createElement('div');
     this.preactRoot.className = 'tarvis__preact-root';
@@ -36,7 +36,7 @@ export class ChatUI {
     this.ctx.customComponents[fnId] = fn;
   }
 
-  async #beforeRender() {
+  private async beforeRender() {
     if (this.ctx.plugins?.value && this.ctx.plugins.value.length > 0) {
       await Promise.all(
         this.ctx.plugins.value.map((plugin: ClientPlugin) => plugin.beforeRender?.(this.ctx))
