@@ -352,6 +352,19 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
               suggestedParameters: data.toolRequest!.suggestedParameters,
               messageId: data.messageId!,
             });
+            // if the last message is an empty assistant placeholder, remove it
+
+            if (
+              ctx.currentThread.value &&
+              ctx.currentThread.value.messages.length > 0 &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].type === 'assistant' &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].content.length === 1 &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].content[0] === ''
+            ) {
+              console.log('remove assistant placeholder')
+              ctx.currentThread.value.messages.pop();
+            }
+
             return;
           } else if (data.type === 'message') {
             if (ctx.currentThread.value) {
