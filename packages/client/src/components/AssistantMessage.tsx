@@ -5,7 +5,7 @@ import { randomStringId } from '../utils';
 import { Remarkable } from 'remarkable';
 
 const MessageContent = ({ contentToShow }: { contentToShow: string }) => {
-  const remarkable = new Remarkable()
+  const remarkable = new Remarkable();
 
   return (
     <div className="flex flex-col gap-2">

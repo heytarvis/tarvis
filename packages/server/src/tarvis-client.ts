@@ -1,4 +1,4 @@
-import {AIMessage, HumanMessage, SystemMessage} from '@langchain/core/messages';
+import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
 import {
   ChatRequest,
   ChatResponse,
@@ -7,12 +7,12 @@ import {
   MCPTool,
   MCPToolsListResponse,
   ModelInfo,
-  UsageMetadata
+  UsageMetadata,
 } from '@tarvis/shared/src';
-import {createOrGetModel, isModelSupported} from './models';
-import {formatSSEMessage} from './sse-utils';
-import {availableModels} from '@tarvis/shared/src/available-models';
-import {z} from 'zod';
+import { createOrGetModel, isModelSupported } from './models';
+import { formatSSEMessage } from './sse-utils';
+import { availableModels } from '@tarvis/shared/src/available-models';
+import { z } from 'zod';
 
 export type OnChunkCallback = (sseMessage: string) => void;
 export type OnCompleteCallback = (sseMessage: string) => void;
@@ -29,7 +29,8 @@ export class TarvisClient {
   private defaultTemperature: number;
   private availableModels: ModelInfo[] = availableModels;
   private tools: Map<string, MCPTool> = new Map();
-  private toolHandlers: Map<string, (args: Record<string, any>) => Promise<MCPCallToolResult>> = new Map();
+  private toolHandlers: Map<string, (args: Record<string, any>) => Promise<MCPCallToolResult>> =
+    new Map();
 
   constructor(options: TarvisClientOptions = {}) {
     this.defaultModelId = options.defaultModelId || 'gpt-3.5-turbo';
@@ -65,7 +66,7 @@ export class TarvisClient {
    */
   getToolsList(): MCPToolsListResponse {
     return {
-      tools: Array.from(this.tools.values())
+      tools: Array.from(this.tools.values()),
     };
   }
 
@@ -95,8 +96,10 @@ export class TarvisClient {
       return await handler(args);
     } catch (error) {
       return {
-        content: [{ type: 'text', text: error instanceof Error ? error.message : 'Unknown error occurred' }],
-        isError: true
+        content: [
+          { type: 'text', text: error instanceof Error ? error.message : 'Unknown error occurred' },
+        ],
+        isError: true,
       };
     }
   }
@@ -142,7 +145,9 @@ export class TarvisClient {
         const errorMessage = error.errors.map(e => e.message).join(', ');
         throw new Error(`Invalid value for ${paramName}: ${errorMessage}`);
       }
-      throw new Error(`Validation error for ${paramName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Validation error for ${paramName}: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -196,8 +201,12 @@ export class TarvisClient {
 
           if (hasTools && !!lastHumanMessage) {
             // Check if any tools should be used
-            const toolDetectionResult = await self.detectToolUsage(langChainMessages, modelId, temperature);
-            console.log('toolDetectionResult', toolDetectionResult)
+            const toolDetectionResult = await self.detectToolUsage(
+              langChainMessages,
+              modelId,
+              temperature
+            );
+            console.log('toolDetectionResult', toolDetectionResult);
 
             if (toolDetectionResult.shouldUseTool) {
               const toolRequestResponse: ChatResponse = {

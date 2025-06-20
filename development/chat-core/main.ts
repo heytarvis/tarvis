@@ -114,4 +114,4 @@ chatUI.render(appEl);
 
 setTimeout(() => {
   ctx.isLoading.value = false;
-}, 1800)
+}, 1800);

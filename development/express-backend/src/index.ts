@@ -32,18 +32,15 @@ const calculatorTool = createMultiParamTool(
   'calculator',
   'Perform mathematical calculations',
   {
-    expression: z.string().describe('Mathematical expression to evaluate (e.g., "2 + 2", "10 * 5")'),
+    expression: z
+      .string()
+      .describe('Mathematical expression to evaluate (e.g., "2 + 2", "10 * 5")'),
   },
   ['expression']
 );
 
 // Example echo tool
-const echoTool = createTextTool(
-  'echo',
-  'Echo back the input text',
-  'text',
-  'Text to echo back'
-);
+const echoTool = createTextTool('echo', 'Echo back the input text', 'text', 'Text to echo back');
 
 // Translation tool
 const translateTool = createMultiParamTool(
@@ -90,7 +87,9 @@ const fileProcessorTool = createMultiParamTool(
   'Process files with various options',
   {
     filename: z.string().describe('Name of the file to process'),
-    operation: z.enum(['compress', 'encrypt', 'backup', 'validate']).describe('Operation to perform'),
+    operation: z
+      .enum(['compress', 'encrypt', 'backup', 'validate'])
+      .describe('Operation to perform'),
     priority: z.enum(['low', 'medium', 'high']).describe('Processing priority'),
     overwrite: z.boolean().describe('Overwrite existing files'),
     max_size: z.number().optional().describe('Maximum file size in MB'),
@@ -102,15 +101,20 @@ const fileProcessorTool = createMultiParamTool(
 tarvisClient.addTool(calculatorTool, async (args: Record<string, any>) => {
   try {
     const expression = args.expression as string;
-    console.log(expression)
+    console.log(expression);
     const result = eval(expression); // Note: In production, use a safe evaluation library
-    console.log(result)
+    console.log(result);
     return {
       content: [{ type: 'text', text: `Result: ${result}` }],
     };
   } catch (error) {
     return {
-      content: [{ type: 'text', text: `Error evaluating expression: ${error instanceof Error ? error.message : 'Unknown error'}` }],
+      content: [
+        {
+          type: 'text',
+          text: `Error evaluating expression: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        },
+      ],
       isError: true,
     };
   }
@@ -123,37 +127,37 @@ tarvisClient.addTool(echoTool, async (args: Record<string, any>) => ({
 tarvisClient.addTool(translateTool, async (args: Record<string, any>) => {
   try {
     const { text, from, to } = args;
-    
+
     // Mock translation - in a real app, you'd call a translation API
     const mockTranslations: Record<string, Record<string, string>> = {
-      'hello': {
-        'es': 'hola',
-        'fr': 'bonjour',
-        'de': 'hallo',
-        'it': 'ciao',
-        'en': 'hello'
+      hello: {
+        es: 'hola',
+        fr: 'bonjour',
+        de: 'hallo',
+        it: 'ciao',
+        en: 'hello',
       },
-      'goodbye': {
-        'es': 'adiós',
-        'fr': 'au revoir',
-        'de': 'auf wiedersehen',
-        'it': 'arrivederci',
-        'en': 'goodbye'
+      goodbye: {
+        es: 'adiós',
+        fr: 'au revoir',
+        de: 'auf wiedersehen',
+        it: 'arrivederci',
+        en: 'goodbye',
       },
       'thank you': {
-        'es': 'gracias',
-        'fr': 'merci',
-        'de': 'danke',
-        'it': 'grazie',
-        'en': 'thank you'
+        es: 'gracias',
+        fr: 'merci',
+        de: 'danke',
+        it: 'grazie',
+        en: 'thank you',
       },
       'how are you': {
-        'es': '¿cómo estás?',
-        'fr': 'comment allez-vous?',
-        'de': 'wie geht es dir?',
-        'it': 'come stai?',
-        'en': 'how are you'
-      }
+        es: '¿cómo estás?',
+        fr: 'comment allez-vous?',
+        de: 'wie geht es dir?',
+        it: 'come stai?',
+        en: 'how are you',
+      },
     };
 
     const lowerText = text.toLowerCase();
@@ -165,31 +169,35 @@ tarvisClient.addTool(translateTool, async (args: Record<string, any>) => {
     } else {
       // Generate a mock translation based on language codes
       const languageNames: Record<string, string> = {
-        'en': 'English',
-        'es': 'Spanish',
-        'fr': 'French',
-        'de': 'German',
-        'it': 'Italian'
+        en: 'English',
+        es: 'Spanish',
+        fr: 'French',
+        de: 'German',
+        it: 'Italian',
       };
-      
+
       const fromLang = languageNames[from] || from;
       const toLang = languageNames[to] || to;
-      
+
       translatedText = `[Mock translation from ${fromLang} to ${toLang}: "${text}"]`;
     }
 
     return {
-      content: [{ 
-        type: 'text', 
-        text: `Translation (${from} → ${to}): ${translatedText}` 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Translation (${from} → ${to}): ${translatedText}`,
+        },
+      ],
     };
   } catch (error) {
     return {
-      content: [{ 
-        type: 'text', 
-        text: `Translation error: ${error instanceof Error ? error.message : 'Unknown error'}` 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Translation error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        },
+      ],
       isError: true,
     };
   }
@@ -198,47 +206,51 @@ tarvisClient.addTool(translateTool, async (args: Record<string, any>) => {
 tarvisClient.addTool(currencyConverterTool, async (args: Record<string, any>) => {
   try {
     const { amount, from_currency, to_currency, include_fees } = args;
-    
+
     // Mock exchange rates
     const rates: Record<string, number> = {
-      'USD': 1.0,
-      'EUR': 0.85,
-      'GBP': 0.73,
-      'JPY': 110.0,
-      'CAD': 1.25,
-      'AUD': 1.35
+      USD: 1.0,
+      EUR: 0.85,
+      GBP: 0.73,
+      JPY: 110.0,
+      CAD: 1.25,
+      AUD: 1.35,
     };
-    
+
     const fromRate = rates[from_currency];
     const toRate = rates[to_currency];
-    
+
     if (!fromRate || !toRate) {
       throw new Error('Unsupported currency');
     }
-    
+
     let convertedAmount = (amount / fromRate) * toRate;
     let feeAmount = 0;
-    
+
     if (include_fees) {
       feeAmount = convertedAmount * 0.02; // 2% fee
       convertedAmount += feeAmount;
     }
-    
+
     const result = `$${amount.toFixed(2)} ${from_currency} = $${convertedAmount.toFixed(2)} ${to_currency}`;
     const feeInfo = include_fees ? ` (includes $${feeAmount.toFixed(2)} fee)` : '';
-    
+
     return {
-      content: [{ 
-        type: 'text', 
-        text: `${result}${feeInfo}` 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `${result}${feeInfo}`,
+        },
+      ],
     };
   } catch (error) {
     return {
-      content: [{ 
-        type: 'text', 
-        text: `Currency conversion error: ${error instanceof Error ? error.message : 'Unknown error'}` 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Currency conversion error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        },
+      ],
       isError: true,
     };
   }
@@ -247,37 +259,41 @@ tarvisClient.addTool(currencyConverterTool, async (args: Record<string, any>) =>
 tarvisClient.addTool(textFormatterTool, async (args: Record<string, any>) => {
   try {
     const { text, uppercase, remove_spaces, reverse, add_prefix } = args;
-    
+
     let formattedText = text;
-    
+
     if (uppercase) {
       formattedText = formattedText.toUpperCase();
     }
-    
+
     if (remove_spaces) {
       formattedText = formattedText.replace(/\s/g, '');
     }
-    
+
     if (reverse) {
       formattedText = formattedText.split('').reverse().join('');
     }
-    
+
     if (add_prefix) {
       formattedText = `${add_prefix}${formattedText}`;
     }
-    
+
     return {
-      content: [{ 
-        type: 'text', 
-        text: `Formatted text: "${formattedText}"` 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Formatted text: "${formattedText}"`,
+        },
+      ],
     };
   } catch (error) {
     return {
-      content: [{ 
-        type: 'text', 
-        text: `Text formatting error: ${error instanceof Error ? error.message : 'Unknown error'}` 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `Text formatting error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        },
+      ],
       isError: true,
     };
   }
@@ -286,44 +302,48 @@ tarvisClient.addTool(textFormatterTool, async (args: Record<string, any>) => {
 tarvisClient.addTool(fileProcessorTool, async (args: Record<string, any>) => {
   try {
     const { filename, operation, priority, overwrite, max_size } = args;
-    
+
     const operations: Record<string, string> = {
       compress: 'compressing',
       encrypt: 'encrypting',
       backup: 'creating backup of',
-      validate: 'validating'
+      validate: 'validating',
     };
-    
+
     const priorities: Record<string, string> = {
       low: 'low priority',
       medium: 'medium priority',
-      high: 'high priority'
+      high: 'high priority',
     };
-    
+
     let result = `Started ${operations[operation as string]} "${filename}" with ${priorities[priority as string]} priority`;
-    
+
     if (overwrite) {
       result += ' (overwrite enabled)';
     }
-    
+
     if (max_size) {
       result += ` (max size: ${max_size}MB)`;
     }
-    
+
     result += '. Processing complete!';
-    
+
     return {
-      content: [{ 
-        type: 'text', 
-        text: result 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: result,
+        },
+      ],
     };
   } catch (error) {
     return {
-      content: [{ 
-        type: 'text', 
-        text: `File processing error: ${error instanceof Error ? error.message : 'Unknown error'}` 
-      }],
+      content: [
+        {
+          type: 'text',
+          text: `File processing error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        },
+      ],
       isError: true,
     };
   }
@@ -361,10 +381,12 @@ app.post('/tool', async (req: Request, res: Response) => {
     console.error('Error executing tool:', error);
 
     const errorResult = {
-      content: [{
-        type: 'text',
-        text: error instanceof Error ? error.message : 'Unknown error occurred'
-      }],
+      content: [
+        {
+          type: 'text',
+          text: error instanceof Error ? error.message : 'Unknown error occurred',
+        },
+      ],
       isError: true,
     };
 

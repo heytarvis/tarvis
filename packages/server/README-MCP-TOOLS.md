@@ -43,7 +43,10 @@ exampleTools.forEach(tool => {
 ```typescript
 // Get all available tools in MCP format
 const toolsList = client.getToolsList();
-console.log('Available tools:', toolsList.tools.map(t => t.name));
+console.log(
+  'Available tools:',
+  toolsList.tools.map(t => t.name)
+);
 ```
 
 ### Using a Tool
@@ -52,7 +55,7 @@ console.log('Available tools:', toolsList.tools.map(t => t.name));
 // Execute a tool with arguments
 const result = await client.useTool({
   name: 'calculator',
-  arguments: { expression: '2 + 2 * 3' }
+  arguments: { expression: '2 + 2 * 3' },
 });
 
 console.log('Result:', result.content);
@@ -65,14 +68,9 @@ console.log('Result:', result.content);
 ```typescript
 import { createTextTool } from '@tarvis/server';
 
-const echoTool = createTextTool(
-  'echo',
-  'Echo back the input text',
-  'text',
-  'Text to echo back'
-);
+const echoTool = createTextTool('echo', 'Echo back the input text', 'text', 'Text to echo back');
 
-client.addTool(echoTool, async (args) => ({
+client.addTool(echoTool, async args => ({
   content: `Echo: ${args.text}`,
 }));
 ```
@@ -99,7 +97,7 @@ const weatherTool = createMultiParamTool(
   ['location']
 );
 
-client.addTool(weatherTool, async (args) => ({
+client.addTool(weatherTool, async args => ({
   content: `Weather for ${args.location}: 22°C, Sunny`,
 }));
 ```
@@ -133,7 +131,7 @@ const customTool: MCPTool = {
   },
 };
 
-client.addTool(customTool, async (args) => {
+client.addTool(customTool, async args => {
   // Your processing logic here
   return {
     content: JSON.stringify({ processed: true, result: args.data }),
@@ -147,13 +145,15 @@ Tool handlers should return a `MCPToolUseResponse` object:
 
 ```typescript
 interface MCPToolUseResponse {
-  content: string | Array<{
-    type: 'text' | 'image_url';
-    text?: string;
-    image_url?: {
-      url: string;
-    };
-  }>;
+  content:
+    | string
+    | Array<{
+        type: 'text' | 'image_url';
+        text?: string;
+        image_url?: {
+          url: string;
+        };
+      }>;
   is_error?: boolean;
 }
 ```
@@ -165,7 +165,7 @@ async function calculatorHandler(args: Record<string, any>): Promise<MCPToolUseR
   try {
     const expression = args.expression as string;
     const result = eval(expression); // Use safe evaluation in production
-    
+
     return {
       content: `Result: ${result}`,
     };
@@ -221,13 +221,13 @@ The client automatically validates tool arguments against the tool's input schem
 // This will throw an error due to missing required argument
 await client.useTool({
   name: 'calculator',
-  arguments: {} // Missing 'expression'
+  arguments: {}, // Missing 'expression'
 });
 
 // This will throw an error due to invalid type
 await client.useTool({
   name: 'calculator',
-  arguments: { expression: 123 } // Should be string
+  arguments: { expression: 123 }, // Should be string
 });
 ```
 
@@ -252,7 +252,7 @@ const chatRequest = {
 // The model can decide to use tools based on the conversation
 const calculationResult = await client.useTool({
   name: 'calculator',
-  arguments: { expression: '15 * 23' }
+  arguments: { expression: '15 * 23' },
 });
 ```
 
@@ -268,10 +268,7 @@ The package includes several example tools:
 ### Using Example Tools
 
 ```typescript
-import { 
-  createClientWithExampleTools,
-  demonstrateToolUsage 
-} from '@tarvis/server';
+import { createClientWithExampleTools, demonstrateToolUsage } from '@tarvis/server';
 
 // Create client with all example tools
 const client = createClientWithExampleTools();
@@ -322,13 +319,15 @@ interface MCPToolUseRequest {
 
 ```typescript
 interface MCPToolUseResponse {
-  content: string | Array<{
-    type: 'text' | 'image_url';
-    text?: string;
-    image_url?: {
-      url: string;
-    };
-  }>;
+  content:
+    | string
+    | Array<{
+        type: 'text' | 'image_url';
+        text?: string;
+        image_url?: {
+          url: string;
+        };
+      }>;
   is_error?: boolean;
 }
 ```
@@ -349,4 +348,4 @@ interface MCPToolUseResponse {
 - **Safe execution**: Use safe evaluation methods instead of `eval()`
 - **Access control**: Consider implementing access control for sensitive tools
 - **Rate limiting**: Implement rate limiting for external API calls
-- **Error handling**: Don't expose sensitive information in error messages 
+- **Error handling**: Don't expose sensitive information in error messages

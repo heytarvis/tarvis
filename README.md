@@ -1,7 +1,7 @@
 # Tarvis
 
 Tarvis is a full-stack library for building AI into web applications. It's primary goal is to provide simple
-APIs and user interfaces for building AI apps, while remaining flexible enough to fit into many stacks and use cases. 
+APIs and user interfaces for building AI apps, while remaining flexible enough to fit into many stacks and use cases.
 
 ## Features
 

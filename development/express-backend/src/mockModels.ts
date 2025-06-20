@@ -32,23 +32,24 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 7, output_tokens: 10, total_tokens: 17 },
     },
     {
-      content: '## Issue Description\n\nCould you please describe the issue you\'re experiencing?',
+      content: "## Issue Description\n\nCould you please describe the issue you're experiencing?",
       usage_metadata: { input_tokens: 10, output_tokens: 12, total_tokens: 22 },
     },
     {
-      content: 'I\'ll help you troubleshoot this step by step.',
+      content: "I'll help you troubleshoot this step by step.",
       usage_metadata: { input_tokens: 8, output_tokens: 10, total_tokens: 18 },
     },
     {
-      content: '### First Steps\n\nLet\'s check if the issue is reproducible.',
+      content: "### First Steps\n\nLet's check if the issue is reproducible.",
       usage_metadata: { input_tokens: 9, output_tokens: 11, total_tokens: 20 },
     },
     {
-      content: 'Can you tell me what steps you\'ve already taken?',
+      content: "Can you tell me what steps you've already taken?",
       usage_metadata: { input_tokens: 8, output_tokens: 10, total_tokens: 18 },
     },
     {
-      content: '## Potential Solutions\n\nBased on your description, here are a few potential solutions:',
+      content:
+        '## Potential Solutions\n\nBased on your description, here are a few potential solutions:',
       usage_metadata: { input_tokens: 10, output_tokens: 12, total_tokens: 22 },
     },
     {
@@ -79,7 +80,7 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 7, output_tokens: 10, total_tokens: 17 },
     },
     {
-      content: '### Code Review\n\nLet\'s start by reviewing your code structure.',
+      content: "### Code Review\n\nLet's start by reviewing your code structure.",
       usage_metadata: { input_tokens: 8, output_tokens: 10, total_tokens: 18 },
     },
     {
@@ -106,7 +107,7 @@ const mockConversations: MockResponse[][] = [
   // Conversation 4: Data analysis (long)
   [
     {
-      content: '# Data Analysis\n\nLet\'s analyze your data together.',
+      content: "# Data Analysis\n\nLet's analyze your data together.",
       usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
     },
     {
@@ -118,7 +119,7 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 7, output_tokens: 11, total_tokens: 18 },
     },
     {
-      content: '### Initial Analysis\n\nFirst, let\'s look at the data distribution.',
+      content: "### Initial Analysis\n\nFirst, let's look at the data distribution.",
       usage_metadata: { input_tokens: 7, output_tokens: 9, total_tokens: 16 },
     },
     {
@@ -126,7 +127,7 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 8, output_tokens: 10, total_tokens: 18 },
     },
     {
-      content: '1. There\'s a clear correlation between variables A and B',
+      content: "1. There's a clear correlation between variables A and B",
       usage_metadata: { input_tokens: 9, output_tokens: 11, total_tokens: 20 },
     },
     {
@@ -145,7 +146,7 @@ const mockConversations: MockResponse[][] = [
   // Conversation 5: Project planning (short)
   [
     {
-      content: '# Project Planning\n\nI\'ll help you plan your project.',
+      content: "# Project Planning\n\nI'll help you plan your project.",
       usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
     },
     {
@@ -153,14 +154,14 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 5, output_tokens: 6, total_tokens: 11 },
     },
     {
-      content: '### Task Breakdown\n\nLet\'s break this down into manageable tasks.',
+      content: "### Task Breakdown\n\nLet's break this down into manageable tasks.",
       usage_metadata: { input_tokens: 7, output_tokens: 9, total_tokens: 16 },
     },
   ],
   // Conversation 6: Learning assistance (long)
   [
     {
-      content: '# Learning Assistance\n\nI\'m here to help you learn.',
+      content: "# Learning Assistance\n\nI'm here to help you learn.",
       usage_metadata: { input_tokens: 5, output_tokens: 7, total_tokens: 12 },
     },
     {
@@ -172,11 +173,11 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
     },
     {
-      content: '### Getting Started\n\nLet\'s start with the fundamentals.',
+      content: "### Getting Started\n\nLet's start with the fundamentals.",
       usage_metadata: { input_tokens: 6, output_tokens: 7, total_tokens: 13 },
     },
     {
-      content: '## Learning Path\n\nHere\'s a step-by-step approach to learning this topic:',
+      content: "## Learning Path\n\nHere's a step-by-step approach to learning this topic:",
       usage_metadata: { input_tokens: 8, output_tokens: 10, total_tokens: 18 },
     },
     {
@@ -199,7 +200,7 @@ const mockConversations: MockResponse[][] = [
   // Conversation 7: Problem solving (short)
   [
     {
-      content: '# Problem Solving\n\nLet\'s solve this problem together.',
+      content: "# Problem Solving\n\nLet's solve this problem together.",
       usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
     },
     {
@@ -207,7 +208,7 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 5, output_tokens: 6, total_tokens: 11 },
     },
     {
-      content: 'I\'ll help you find the best solution.',
+      content: "I'll help you find the best solution.",
       usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
     },
   ],
@@ -226,7 +227,7 @@ const mockConversations: MockResponse[][] = [
       usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
     },
     {
-      content: '### Source Identification\n\nLet\'s start by identifying key sources.',
+      content: "### Source Identification\n\nLet's start by identifying key sources.",
       usage_metadata: { input_tokens: 7, output_tokens: 8, total_tokens: 15 },
     },
     {
@@ -253,7 +254,7 @@ const mockConversations: MockResponse[][] = [
   // Conversation 9: Writing assistance (short)
   [
     {
-      content: '# Writing Assistance\n\nI\'ll help you with your writing.',
+      content: "# Writing Assistance\n\nI'll help you with your writing.",
       usage_metadata: { input_tokens: 5, output_tokens: 7, total_tokens: 12 },
     },
     {
@@ -268,19 +269,19 @@ const mockConversations: MockResponse[][] = [
   // Conversation 10: Decision making (long)
   [
     {
-      content: '# Decision Making\n\nLet\'s work through this decision.',
+      content: "# Decision Making\n\nLet's work through this decision.",
       usage_metadata: { input_tokens: 5, output_tokens: 7, total_tokens: 12 },
     },
     {
-      content: '## Options\n\nWhat are the options you\'re considering?',
+      content: "## Options\n\nWhat are the options you're considering?",
       usage_metadata: { input_tokens: 7, output_tokens: 9, total_tokens: 16 },
     },
     {
-      content: 'I\'ll help you evaluate the pros and cons.',
+      content: "I'll help you evaluate the pros and cons.",
       usage_metadata: { input_tokens: 6, output_tokens: 9, total_tokens: 15 },
     },
     {
-      content: '### Analysis\n\nLet\'s analyze each option systematically.',
+      content: "### Analysis\n\nLet's analyze each option systematically.",
       usage_metadata: { input_tokens: 7, output_tokens: 8, total_tokens: 15 },
     },
     {
@@ -312,7 +313,8 @@ const plainTextResponses: MockResponse[] = [
     usage_metadata: { input_tokens: 5, output_tokens: 8, total_tokens: 13 },
   },
   {
-    content: 'I understand you need technical support. Could you please describe the issue you\'re experiencing?',
+    content:
+      "I understand you need technical support. Could you please describe the issue you're experiencing?",
     usage_metadata: { input_tokens: 10, output_tokens: 12, total_tokens: 22 },
   },
   {
@@ -320,19 +322,19 @@ const plainTextResponses: MockResponse[] = [
     usage_metadata: { input_tokens: 8, output_tokens: 10, total_tokens: 18 },
   },
   {
-    content: 'Let\'s analyze your data together. What kind of insights are you looking for?',
+    content: "Let's analyze your data together. What kind of insights are you looking for?",
     usage_metadata: { input_tokens: 8, output_tokens: 9, total_tokens: 17 },
   },
   {
-    content: 'I\'ll help you plan your project. What are your main objectives?',
+    content: "I'll help you plan your project. What are your main objectives?",
     usage_metadata: { input_tokens: 5, output_tokens: 6, total_tokens: 11 },
   },
   {
-    content: 'I\'m here to help you learn. What topic would you like to explore?',
+    content: "I'm here to help you learn. What topic would you like to explore?",
     usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
   },
   {
-    content: 'Let\'s solve this problem together. What have you tried so far?',
+    content: "Let's solve this problem together. What have you tried so far?",
     usage_metadata: { input_tokens: 5, output_tokens: 6, total_tokens: 11 },
   },
   {
@@ -340,11 +342,11 @@ const plainTextResponses: MockResponse[] = [
     usage_metadata: { input_tokens: 6, output_tokens: 8, total_tokens: 14 },
   },
   {
-    content: 'I\'ll help you with your writing. What type of content are you working on?',
+    content: "I'll help you with your writing. What type of content are you working on?",
     usage_metadata: { input_tokens: 7, output_tokens: 9, total_tokens: 16 },
   },
   {
-    content: 'Let\'s work through this decision. What are the options you\'re considering?',
+    content: "Let's work through this decision. What are the options you're considering?",
     usage_metadata: { input_tokens: 7, output_tokens: 9, total_tokens: 16 },
   },
 ];

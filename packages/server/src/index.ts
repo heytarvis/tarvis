@@ -26,10 +26,7 @@ export type {
   MCPToolsListResponse,
 } from '@tarvis/shared/src';
 
-export {
-  createTextTool,
-  createMultiParamTool,
-} from './mcp-tools';
+export { createTextTool, createMultiParamTool } from './mcp-tools';
 
 // Export tool endpoint
 export { createToolEndpoint } from './tool-endpoint';

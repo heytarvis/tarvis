@@ -96,7 +96,9 @@ export default function ToolConfirmationModal({
     let inputType = 'text';
     let inputProps: any = {};
     const zodSchemaDef = schema._def as z.ZodTypeDef | z.ZodEnumDef;
-    const zodTypeName = (schema._def as { typeName: 'ZodString' | 'ZodNumber' | 'ZodBoolean' | 'ZodEnum' }).typeName;
+    const zodTypeName = (
+      schema._def as { typeName: 'ZodString' | 'ZodNumber' | 'ZodBoolean' | 'ZodEnum' }
+    ).typeName;
 
     if (zodTypeName === 'ZodString') {
       inputType = 'text';
@@ -110,7 +112,7 @@ export default function ToolConfirmationModal({
       inputProps.options = (zodSchemaDef as z.ZodEnumDef).values;
     }
 
-    console.log(inputType)
+    console.log(inputType);
 
     return (
       <div key={key} className="tarvis__tool-parameter">
@@ -126,7 +128,7 @@ export default function ToolConfirmationModal({
               label: option,
             }))}
             value={value}
-            onChange={(selectedValue) => handleParameterChange(key, selectedValue)}
+            onChange={selectedValue => handleParameterChange(key, selectedValue)}
             placeholder="Select an option"
             error={!!error}
           />
@@ -135,7 +137,7 @@ export default function ToolConfirmationModal({
             type="checkbox"
             className={`tarvis__tool-parameter-input ${error ? 'tarvis__error' : ''}`}
             checked={value}
-            onChange={(e) => handleParameterChange(key, e.currentTarget.checked)}
+            onChange={e => handleParameterChange(key, e.currentTarget.checked)}
             required={isRequired}
           />
         ) : (
@@ -143,7 +145,7 @@ export default function ToolConfirmationModal({
             type={inputType}
             className={`tarvis__tool-parameter-input ${error ? 'tarvis__error' : ''}`}
             value={value}
-            onChange={(e) => handleParameterChange(key, e.currentTarget.value)}
+            onChange={e => handleParameterChange(key, e.currentTarget.value)}
             required={isRequired}
             placeholder={`Enter ${key}...`}
           />
@@ -161,11 +163,7 @@ export default function ToolConfirmationModal({
       <div className="tarvis__tool-modal">
         <div className="tarvis__tool-modal-header">
           <h3>Use Tool: {toolName}</h3>
-          <button
-            className="tarvis__tool-modal-close"
-            onClick={onCancel}
-            aria-label="Close modal"
-          >
+          <button className="tarvis__tool-modal-close" onClick={onCancel} aria-label="Close modal">
             <svg
               viewBox="0 0 24 24"
               fill="none"

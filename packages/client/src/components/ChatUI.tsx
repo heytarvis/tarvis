@@ -205,7 +205,9 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
       if (ctx.currentThread.value) {
         const errorMessage: AssistantMessage = {
           id: randomStringId(),
-          content: [`Sorry, I encountered an error while trying to use the ${toolRequest.toolName} tool. Please try again or ask me something else.`],
+          content: [
+            `Sorry, I encountered an error while trying to use the ${toolRequest.toolName} tool. Please try again or ask me something else.`,
+          ],
           type: 'assistant',
           timestamp: new Date(),
           currentlySelectedVersionIndex: 0,
@@ -357,11 +359,14 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
             if (
               ctx.currentThread.value &&
               ctx.currentThread.value.messages.length > 0 &&
-              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].type === 'assistant' &&
-              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].content.length === 1 &&
-              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].content[0] === ''
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].type ===
+                'assistant' &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].content
+                .length === 1 &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1]
+                .content[0] === ''
             ) {
-              console.log('remove assistant placeholder')
+              console.log('remove assistant placeholder');
               ctx.currentThread.value.messages.pop();
             }
 

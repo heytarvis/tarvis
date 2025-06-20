@@ -89,12 +89,11 @@ export interface MCPCallToolRequest {
 }
 
 export interface TextContent {
-  type: "text";
+  type: 'text';
   text: string;
 }
 
-export type ContentBlock =
-  | TextContent;
+export type ContentBlock = TextContent;
 
 export interface MCPCallToolResult {
   content: ContentBlock[];
