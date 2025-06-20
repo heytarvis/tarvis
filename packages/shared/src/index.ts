@@ -64,6 +64,7 @@ export interface ChatResponse {
       properties: Record<string, z.ZodSchema>;
       required?: string[];
     };
+    suggestedParameters?: Record<string, any>;
   };
 }
 

@@ -209,6 +209,7 @@ export class TarvisClient {
                   toolName: toolDetectionResult.toolName!,
                   toolDescription: toolDetectionResult.toolDescription!,
                   inputSchema: toolDetectionResult.inputSchema!,
+                  suggestedParameters: toolDetectionResult.suggestedParameters!,
                 },
               };
 
@@ -313,6 +314,7 @@ export class TarvisClient {
     toolName?: string;
     toolDescription?: string;
     inputSchema?: any;
+    suggestedParameters?: Record<string, any>;
   }> {
     if (this.tools.size === 0) {
       return { shouldUseTool: false };
@@ -328,13 +330,17 @@ export class TarvisClient {
       return { shouldUseTool: false };
     }
 
-    // Create a system prompt that lists all available tools
+    // Create a system prompt that lists all available tools with their schemas
     const toolsList = Array.from(this.tools.values());
     const toolsDescription = toolsList
-      .map(tool => `- ${tool.name}: ${tool.description}`)
-      .join('\n');
+      .map(tool => {
+        const schemaInfo = JSON.stringify(tool.inputSchema, null, 2);
+        return `- ${tool.name}: ${tool.description}
+  Input Schema: ${schemaInfo}`;
+      })
+      .join('\n\n');
 
-    const detectionPrompt = `You are a tool usage detector. You have access to the following tools:
+    const detectionPrompt = `You are a tool usage detector and parameter suggester. You have access to the following tools:
 
 ${toolsDescription}
 
@@ -343,15 +349,20 @@ The user's latest message is: "${lastHumanMessage.content}"
 Analyze if any of the available tools would be useful to respond to the user's request. Consider:
 1. Does the user's request match the purpose of any tool?
 2. Would using a tool provide a better response than a regular conversation?
+3. If a tool should be used, what would be sensible default parameters based on the user's message?
 
 Respond with ONLY a JSON object in this exact format:
 {
   "shouldUseTool": true/false,
   "toolName": "name_of_tool" (only if shouldUseTool is true),
+  "suggestedParameters": {
+    "param1": "suggested_value1",
+    "param2": "suggested_value2"
+  } (only if shouldUseTool is true, include all required parameters and any optional ones that make sense),
   "reasoning": "brief explanation of your decision"
 }
 
-If shouldUseTool is false, you can omit toolName.`;
+If shouldUseTool is false, you can omit toolName and suggestedParameters.`;
 
     try {
       const detectionModel = createOrGetModel(this.availableModels, modelId, { temperature: 0.1 });
@@ -386,6 +397,7 @@ If shouldUseTool is false, you can omit toolName.`;
             toolName: tool.name,
             toolDescription: tool.description || '',
             inputSchema: tool.inputSchema,
+            suggestedParameters: detectionResult.suggestedParameters || {},
           };
         }
       }

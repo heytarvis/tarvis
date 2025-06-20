@@ -10,6 +10,7 @@ interface ToolConfirmationModalProps {
     properties: Record<string, z.ZodSchema>;
     required?: string[];
   };
+  suggestedParameters?: Record<string, any>;
   onConfirm: (parameters: Record<string, any>) => void;
   onCancel: () => void;
 }
@@ -19,19 +20,20 @@ export default function ToolConfirmationModal({
   toolName,
   toolDescription,
   inputSchema,
+  suggestedParameters,
   onConfirm,
   onCancel,
 }: ToolConfirmationModalProps) {
   const [parameters, setParameters] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Reset form when modal opens
+  // Reset form when modal opens and pre-fill with suggested parameters
   useEffect(() => {
     if (isOpen) {
-      setParameters({});
+      setParameters(suggestedParameters || {});
       setErrors({});
     }
-  }, [isOpen]);
+  }, [isOpen, suggestedParameters]);
 
   const handleParameterChange = (key: string, value: any) => {
     setParameters(prev => ({

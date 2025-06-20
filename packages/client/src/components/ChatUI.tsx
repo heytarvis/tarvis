@@ -65,6 +65,7 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
     toolName: string;
     toolDescription: string;
     inputSchema: any;
+    suggestedParameters?: Record<string, any>;
     messageId: string;
   } | null>(null);
 
@@ -348,6 +349,7 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
               toolName: data.toolRequest!.toolName,
               toolDescription: data.toolRequest!.toolDescription,
               inputSchema: data.toolRequest!.inputSchema,
+              suggestedParameters: data.toolRequest!.suggestedParameters,
               messageId: data.messageId!,
             });
             return;
@@ -833,6 +835,7 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
           toolName={toolRequest.toolName}
           toolDescription={toolRequest.toolDescription}
           inputSchema={toolRequest.inputSchema}
+          suggestedParameters={toolRequest.suggestedParameters}
           onConfirm={handleToolConfirm}
           onCancel={handleToolCancel}
         />
