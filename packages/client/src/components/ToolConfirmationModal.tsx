@@ -94,18 +94,22 @@ export default function ToolConfirmationModal({
     // Determine input type based on schema
     let inputType = 'text';
     let inputProps: any = {};
+    const zodSchemaDef = schema._def as z.ZodTypeDef | z.ZodEnumDef;
+    const zodTypeName = (schema._def as { typeName: 'ZodString' | 'ZodNumber' | 'ZodBoolean' | 'ZodEnum' }).typeName;
 
-    if (schema instanceof z.ZodString) {
+    if (zodTypeName === 'ZodString') {
       inputType = 'text';
-    } else if (schema instanceof z.ZodNumber) {
+    } else if (zodTypeName === 'ZodNumber') {
       inputType = 'number';
-    } else if (schema instanceof z.ZodBoolean) {
+    } else if (zodTypeName === 'ZodBoolean') {
       inputType = 'checkbox';
       inputProps.checked = value;
-    } else if (schema instanceof z.ZodEnum) {
+    } else if (zodTypeName === 'ZodEnum') {
       inputType = 'select';
-      inputProps.options = schema._def.values;
+      inputProps.options = (zodSchemaDef as z.ZodEnumDef).values;
     }
+
+    console.log(inputType)
 
     return (
       <div key={key} className="tarvis__tool-parameter">

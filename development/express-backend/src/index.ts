@@ -57,6 +57,47 @@ const translateTool = createMultiParamTool(
   ['text', 'from', 'to']
 );
 
+// Number-based tool - Currency converter
+const currencyConverterTool = createMultiParamTool(
+  'currency_converter',
+  'Convert between different currencies',
+  {
+    amount: z.number().describe('Amount to convert'),
+    from_currency: z.enum(['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD']).describe('Source currency'),
+    to_currency: z.enum(['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD']).describe('Target currency'),
+    include_fees: z.boolean().optional().describe('Include conversion fees in calculation'),
+  },
+  ['amount', 'from_currency', 'to_currency']
+);
+
+// Boolean-based tool - Text formatter
+const textFormatterTool = createMultiParamTool(
+  'text_formatter',
+  'Format text with various options',
+  {
+    text: z.string().describe('Text to format'),
+    uppercase: z.boolean().describe('Convert to uppercase'),
+    remove_spaces: z.boolean().describe('Remove all spaces'),
+    reverse: z.boolean().describe('Reverse the text'),
+    add_prefix: z.string().optional().describe('Add prefix to text'),
+  },
+  ['text', 'uppercase', 'remove_spaces', 'reverse']
+);
+
+// Mixed types tool - File processor
+const fileProcessorTool = createMultiParamTool(
+  'file_processor',
+  'Process files with various options',
+  {
+    filename: z.string().describe('Name of the file to process'),
+    operation: z.enum(['compress', 'encrypt', 'backup', 'validate']).describe('Operation to perform'),
+    priority: z.enum(['low', 'medium', 'high']).describe('Processing priority'),
+    overwrite: z.boolean().describe('Overwrite existing files'),
+    max_size: z.number().optional().describe('Maximum file size in MB'),
+  },
+  ['filename', 'operation', 'priority', 'overwrite']
+);
+
 // Add tools to the client
 tarvisClient.addTool(calculatorTool, async (args: Record<string, any>) => {
   try {
@@ -148,6 +189,140 @@ tarvisClient.addTool(translateTool, async (args: Record<string, any>) => {
       content: [{ 
         type: 'text', 
         text: `Translation error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      }],
+      isError: true,
+    };
+  }
+});
+
+tarvisClient.addTool(currencyConverterTool, async (args: Record<string, any>) => {
+  try {
+    const { amount, from_currency, to_currency, include_fees } = args;
+    
+    // Mock exchange rates
+    const rates: Record<string, number> = {
+      'USD': 1.0,
+      'EUR': 0.85,
+      'GBP': 0.73,
+      'JPY': 110.0,
+      'CAD': 1.25,
+      'AUD': 1.35
+    };
+    
+    const fromRate = rates[from_currency];
+    const toRate = rates[to_currency];
+    
+    if (!fromRate || !toRate) {
+      throw new Error('Unsupported currency');
+    }
+    
+    let convertedAmount = (amount / fromRate) * toRate;
+    let feeAmount = 0;
+    
+    if (include_fees) {
+      feeAmount = convertedAmount * 0.02; // 2% fee
+      convertedAmount += feeAmount;
+    }
+    
+    const result = `$${amount.toFixed(2)} ${from_currency} = $${convertedAmount.toFixed(2)} ${to_currency}`;
+    const feeInfo = include_fees ? ` (includes $${feeAmount.toFixed(2)} fee)` : '';
+    
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `${result}${feeInfo}` 
+      }],
+    };
+  } catch (error) {
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `Currency conversion error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      }],
+      isError: true,
+    };
+  }
+});
+
+tarvisClient.addTool(textFormatterTool, async (args: Record<string, any>) => {
+  try {
+    const { text, uppercase, remove_spaces, reverse, add_prefix } = args;
+    
+    let formattedText = text;
+    
+    if (uppercase) {
+      formattedText = formattedText.toUpperCase();
+    }
+    
+    if (remove_spaces) {
+      formattedText = formattedText.replace(/\s/g, '');
+    }
+    
+    if (reverse) {
+      formattedText = formattedText.split('').reverse().join('');
+    }
+    
+    if (add_prefix) {
+      formattedText = `${add_prefix}${formattedText}`;
+    }
+    
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `Formatted text: "${formattedText}"` 
+      }],
+    };
+  } catch (error) {
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `Text formatting error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      }],
+      isError: true,
+    };
+  }
+});
+
+tarvisClient.addTool(fileProcessorTool, async (args: Record<string, any>) => {
+  try {
+    const { filename, operation, priority, overwrite, max_size } = args;
+    
+    const operations: Record<string, string> = {
+      compress: 'compressing',
+      encrypt: 'encrypting',
+      backup: 'creating backup of',
+      validate: 'validating'
+    };
+    
+    const priorities: Record<string, string> = {
+      low: 'low priority',
+      medium: 'medium priority',
+      high: 'high priority'
+    };
+    
+    let result = `Started ${operations[operation as string]} "${filename}" with ${priorities[priority as string]} priority`;
+    
+    if (overwrite) {
+      result += ' (overwrite enabled)';
+    }
+    
+    if (max_size) {
+      result += ` (max size: ${max_size}MB)`;
+    }
+    
+    result += '. Processing complete!';
+    
+    return {
+      content: [{ 
+        type: 'text', 
+        text: result 
+      }],
+    };
+  } catch (error) {
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `File processing error: ${error instanceof Error ? error.message : 'Unknown error'}` 
       }],
       isError: true,
     };
