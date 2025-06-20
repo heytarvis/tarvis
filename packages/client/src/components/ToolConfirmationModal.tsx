@@ -8,7 +8,7 @@ interface ToolConfirmationModalProps {
   toolDescription: string;
   inputSchema: {
     type: 'object';
-    properties: Record<string, z.ZodSchema>;
+    properties: Record<string, any>;
     required?: string[];
   };
   suggestedParameters?: Record<string, any>;
@@ -87,7 +87,7 @@ export default function ToolConfirmationModal({
     }
   };
 
-  const renderParameterInput = (key: string, schema: z.ZodSchema) => {
+  const renderParameterInput = (key: string, schema: any) => {
     const isRequired = inputSchema.required?.includes(key) || false;
     const value = parameters[key] || '';
     const error = errors[key];

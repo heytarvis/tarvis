@@ -39,7 +39,7 @@ export function createTextTool(
 export function createMultiParamTool(
   name: string,
   description: string,
-  properties: Record<string, z.ZodSchema>,
+  properties: Record<string, any>,
   required: string[]
 ): MCPTool {
   return {

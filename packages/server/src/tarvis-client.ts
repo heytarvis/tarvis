@@ -134,9 +134,9 @@ export class TarvisClient {
    * @param value The value to validate
    * @param paramName The parameter name for error messages
    */
-  private validateParameterValue(schema: z.ZodSchema, value: any, paramName: string): void {
+  private validateParameterValue(schema: any, value: any, paramName: string): void {
     try {
-      schema.parse(value);
+      (schema as z.ZodSchema).parse(value);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const errorMessage = error.errors.map(e => e.message).join(', ');

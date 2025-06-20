@@ -61,7 +61,7 @@ export interface ChatResponse {
     toolDescription: string;
     inputSchema: {
       type: 'object';
-      properties: Record<string, z.ZodSchema>;
+      properties: Record<string, any>;
       required?: string[];
     };
     suggestedParameters?: Record<string, any>;
@@ -78,7 +78,7 @@ export interface MCPTool extends BaseMetadata {
   description?: string;
   inputSchema: {
     type: 'object';
-    properties: Record<string, z.ZodSchema>;
+    properties: Record<string, any>;
     required?: string[];
   };
 }
