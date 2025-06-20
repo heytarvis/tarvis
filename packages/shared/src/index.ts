@@ -47,7 +47,7 @@ export interface UsageMetadata {
 }
 
 export interface ChatResponse {
-  type: 'message' | 'error' | 'complete';
+  type: 'message' | 'error' | 'complete' | 'toolRequest';
   content?: string;
   error?: string;
   threadId: string;
@@ -55,4 +55,50 @@ export interface ChatResponse {
   threadTitle?: string;
   isRetry?: boolean;
   usage_metadata?: UsageMetadata;
+  toolRequest?: {
+    toolName: string;
+    toolDescription: string;
+    inputSchema: {
+      type: 'object';
+      properties: Record<string, any>;
+      required?: string[];
+    };
+    suggestedParameters?: Record<string, any>;
+  };
+}
+
+export interface BaseMetadata {
+  name: string;
+  title?: string;
+}
+
+export interface MCPTool extends BaseMetadata {
+  name: string;
+  description?: string;
+  inputSchema: {
+    type: 'object';
+    properties: Record<string, any>;
+    required?: string[];
+  };
+}
+
+export interface MCPCallToolRequest {
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+export interface TextContent {
+  type: 'text';
+  text: string;
+}
+
+export type ContentBlock = TextContent;
+
+export interface MCPCallToolResult {
+  content: ContentBlock[];
+  isError?: boolean;
+}
+
+export interface MCPToolsListResponse {
+  tools: MCPTool[];
 }

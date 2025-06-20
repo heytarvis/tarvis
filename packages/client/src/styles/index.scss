@@ -6,6 +6,8 @@
 @use 'model-selector';
 @use 'model-settings';
 @use 'skeleton';
+@use 'tool-modal';
+@use 'custom-select';
 
 @keyframes typing {
   0%,

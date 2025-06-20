@@ -14,6 +14,7 @@ import AssistantMessageComponent from './AssistantMessage';
 import UserMessageComponent from './UserMessage';
 import ModelSelector from './ModelSelector';
 import ModelSettings from './ModelSettings';
+import ToolConfirmationModal from './ToolConfirmationModal';
 import { randomStringId } from '../utils';
 import { ChatUiContext } from '@tarvis/shared/src/types/chat-ui-context.model';
 
@@ -58,6 +59,15 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
     ctx.model.value || Model.GPT_3_5_TURBO
   );
   const [temperature, setTemperature] = useState<number>(ctx.temperature.value || 0.7);
+
+  // Tool request state
+  const [toolRequest, setToolRequest] = useState<{
+    toolName: string;
+    toolDescription: string;
+    inputSchema: any;
+    suggestedParameters?: Record<string, any>;
+    messageId: string;
+  } | null>(null);
 
   // Initialize current thread
   useEffect(() => {
@@ -136,6 +146,90 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
         handleSendMessage();
       }
     }
+  };
+
+  const handleToolConfirm = async (parameters: Record<string, any>) => {
+    if (!toolRequest) return;
+
+    setToolRequest(null);
+    setIsLoading(true);
+
+    try {
+      // Call the tool with the provided parameters
+      // TODO: REPLACE WITH toolEndpoint
+      const response = await fetch(`http://localhost:3001/tool`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: toolRequest.toolName,
+          arguments: parameters,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to execute tool');
+      }
+
+      const toolResult = await response.json();
+
+      // Add the tool result as an assistant message
+      if (ctx.currentThread.value) {
+        const toolMessage: AssistantMessage = {
+          id: randomStringId(),
+          content: [toolResult.content[0]?.text || 'Tool executed successfully'],
+          type: 'assistant',
+          timestamp: new Date(),
+          currentlySelectedVersionIndex: 0,
+        };
+
+        const updatedThread: Thread = {
+          ...ctx.currentThread.value,
+          messages: [...ctx.currentThread.value.messages, toolMessage],
+        };
+
+        ctx.currentThread.value = updatedThread;
+        ctx.threads.value = ctx.threads.value.map(thread =>
+          thread.id === updatedThread.id ? updatedThread : thread
+        );
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error executing tool:', error);
+      setErrorMessage('Failed to execute tool');
+      setIsLoading(false);
+
+      // Add an assistant message indicating the tool failed
+      if (ctx.currentThread.value) {
+        const errorMessage: AssistantMessage = {
+          id: randomStringId(),
+          content: [
+            `Sorry, I encountered an error while trying to use the ${toolRequest.toolName} tool. Please try again or ask me something else.`,
+          ],
+          type: 'assistant',
+          timestamp: new Date(),
+          currentlySelectedVersionIndex: 0,
+        };
+
+        const updatedThread: Thread = {
+          ...ctx.currentThread.value,
+          messages: [...ctx.currentThread.value.messages, errorMessage],
+        };
+
+        ctx.currentThread.value = updatedThread;
+        ctx.threads.value = ctx.threads.value.map(thread =>
+          thread.id === updatedThread.id ? updatedThread : thread
+        );
+      }
+    }
+  };
+
+  const handleToolCancel = () => {
+    setToolRequest(null);
+    // Continue with normal chat flow
+    handleSendMessage();
   };
 
   const parseSSEMessage = (line: string): ChatResponse | null => {
@@ -250,7 +344,33 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
           const data = parseSSEMessage(line);
           if (!data) continue;
 
-          if (data.type === 'message') {
+          if (data.type === 'toolRequest') {
+            setIsLoading(false);
+            // Show tool confirmation modal
+            setToolRequest({
+              toolName: data.toolRequest!.toolName,
+              toolDescription: data.toolRequest!.toolDescription,
+              inputSchema: data.toolRequest!.inputSchema,
+              suggestedParameters: data.toolRequest!.suggestedParameters,
+              messageId: data.messageId!,
+            });
+            // if the last message is an empty assistant placeholder, remove it
+
+            if (
+              ctx.currentThread.value &&
+              ctx.currentThread.value.messages.length > 0 &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].type ===
+                'assistant' &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1].content
+                .length === 1 &&
+              ctx.currentThread.value.messages[ctx.currentThread.value.messages.length - 1]
+                .content[0] === ''
+            ) {
+              ctx.currentThread.value.messages.pop();
+            }
+
+            return;
+          } else if (data.type === 'message') {
             if (ctx.currentThread.value) {
               const updatedThread: Thread = {
                 ...ctx.currentThread.value,
@@ -724,6 +844,19 @@ export default function ChatUIComponent({ ctx }: ChatUIProps) {
           </div>
         </div>
       </div>
+
+      {/* Add the tool confirmation modal */}
+      {toolRequest && (
+        <ToolConfirmationModal
+          isOpen={!!toolRequest}
+          toolName={toolRequest.toolName}
+          toolDescription={toolRequest.toolDescription}
+          inputSchema={toolRequest.inputSchema}
+          suggestedParameters={toolRequest.suggestedParameters}
+          onConfirm={handleToolConfirm}
+          onCancel={handleToolCancel}
+        />
+      )}
     </div>
   );
 }

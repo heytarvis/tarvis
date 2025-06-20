@@ -118,6 +118,9 @@ importers:
       remarkable:
         specifier: ^2.0.1
         version: 2.0.1
+      zod:
+        specifier: ^3.0.0
+        version: 3.25.51
     devDependencies:
       '@tarvis/shared':
         specifier: workspace:*
@@ -162,6 +165,9 @@ importers:
       ws:
         specifier: ^8.18.2
         version: 8.18.2
+      zod:
+        specifier: ^3.0.0
+        version: 3.25.51
     devDependencies:
       '@tarvis/shared':
         specifier: workspace:*
@@ -172,6 +178,9 @@ importers:
 
   packages/shared:
     dependencies:
+      '@langchain/core':
+        specifier: ^0.3.60
+        version: 0.3.60(openai@4.104.0(ws@8.18.2)(zod@3.25.51))
       '@preact/signals':
         specifier: 2.2.0
         version: 2.2.0(preact@10.26.8)
@@ -500,6 +509,10 @@ packages:
 
   '@langchain/core@0.3.57':
     resolution: {integrity: sha512-jz28qCTKJmi47b6jqhQ6vYRTG5jRpqhtPQjriRTB5wR8mgvzo6xKs0fG/kExS3ZvM79ytD1npBvgf8i19xOo9Q==}
+    engines: {node: '>=18'}
+
+  '@langchain/core@0.3.60':
+    resolution: {integrity: sha512-FlUjO7ovGnaKcb2JPmw5ajPaZj18LVjh/vAURtdzzFy4UsYBLv/5Y3HJQ2KgDdrl6sW/UyfG0zWdnhZQ1A5eJw==}
     engines: {node: '>=18'}
 
   '@langchain/google-genai@0.2.11':
@@ -1569,6 +1582,14 @@ packages:
 
   langsmith@0.3.30:
     resolution: {integrity: sha512-ZaiaOx9MysuSQlAkRw8mjm7iqhrlF7HI0LCTLxiNBEWBPywdkgI7UnN+s7KtlRiM0tP1cOLm+dQY++Fi33jkPQ==}
+    peerDependencies:
+      openai: '*'
+    peerDependenciesMeta:
+      openai:
+        optional: true
+
+  langsmith@0.3.33:
+    resolution: {integrity: sha512-imNIaBL6+ElE5eMzNHYwFxo6W/6rHlqcaUjCYoIeGdCYWlARxE3CTGKul5DJnaUgGP2CTLFeNXyvRx5HWC/4KQ==}
     peerDependencies:
       openai: '*'
     peerDependenciesMeta:
@@ -2826,6 +2847,23 @@ snapshots:
     transitivePeerDependencies:
       - openai
 
+  '@langchain/core@0.3.60(openai@4.104.0(ws@8.18.2)(zod@3.25.51))':
+    dependencies:
+      '@cfworker/json-schema': 4.1.1
+      ansi-styles: 5.2.0
+      camelcase: 6.3.0
+      decamelize: 1.2.0
+      js-tiktoken: 1.0.20
+      langsmith: 0.3.33(openai@4.104.0(ws@8.18.2)(zod@3.25.51))
+      mustache: 4.2.0
+      p-queue: 6.6.2
+      p-retry: 4.6.2
+      uuid: 10.0.0
+      zod: 3.25.51
+      zod-to-json-schema: 3.24.5(zod@3.25.51)
+    transitivePeerDependencies:
+      - openai
+
   '@langchain/google-genai@0.2.11(@langchain/core@0.3.57(openai@4.104.0(ws@8.18.2)(zod@3.25.51)))':
     dependencies:
       '@google/generative-ai': 0.24.1
@@ -3828,6 +3866,18 @@ snapshots:
       - ws
 
   langsmith@0.3.30(openai@4.104.0(ws@8.18.2)(zod@3.25.51)):
+    dependencies:
+      '@types/uuid': 10.0.0
+      chalk: 4.1.2
+      console-table-printer: 2.14.1
+      p-queue: 6.6.2
+      p-retry: 4.6.2
+      semver: 7.7.2
+      uuid: 10.0.0
+    optionalDependencies:
+      openai: 4.104.0(ws@8.18.2)(zod@3.25.51)
+
+  langsmith@0.3.33(openai@4.104.0(ws@8.18.2)(zod@3.25.51)):
     dependencies:
       '@types/uuid': 10.0.0
       chalk: 4.1.2

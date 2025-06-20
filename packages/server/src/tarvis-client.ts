@@ -1,8 +1,18 @@
 import { AIMessage, HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { ChatRequest, ChatResponse, ModelInfo, UsageMetadata } from '@tarvis/shared/src';
+import {
+  ChatRequest,
+  ChatResponse,
+  MCPCallToolRequest,
+  MCPCallToolResult,
+  MCPTool,
+  MCPToolsListResponse,
+  ModelInfo,
+  UsageMetadata,
+} from '@tarvis/shared/src';
 import { createOrGetModel, isModelSupported } from './models';
 import { formatSSEMessage } from './sse-utils';
 import { availableModels } from '@tarvis/shared/src/available-models';
+import { z } from 'zod';
 
 export type OnChunkCallback = (sseMessage: string) => void;
 export type OnCompleteCallback = (sseMessage: string) => void;
@@ -18,6 +28,9 @@ export class TarvisClient {
   private defaultModelId: string;
   private defaultTemperature: number;
   private availableModels: ModelInfo[] = availableModels;
+  private tools: Map<string, MCPTool> = new Map();
+  private toolHandlers: Map<string, (args: Record<string, any>) => Promise<MCPCallToolResult>> =
+    new Map();
 
   constructor(options: TarvisClientOptions = {}) {
     this.defaultModelId = options.defaultModelId || 'gpt-3.5-turbo';
@@ -25,6 +38,116 @@ export class TarvisClient {
 
     if (options.availableModels) {
       this.availableModels = options.availableModels;
+    }
+  }
+
+  /**
+   * Add a tool to the client
+   * @param tool The MCP tool definition
+   * @param handler Handler function for the tool
+   */
+  addTool(tool: MCPTool, handler: (args: Record<string, any>) => Promise<MCPCallToolResult>): void {
+    this.tools.set(tool.name, tool);
+    this.toolHandlers.set(tool.name, handler);
+  }
+
+  /**
+   * Remove a tool from the client
+   * @param toolName The name of the tool to remove
+   */
+  removeTool(toolName: string): void {
+    this.tools.delete(toolName);
+    this.toolHandlers.delete(toolName);
+  }
+
+  /**
+   * Get all available tools in MCP format
+   * @returns JSON-RPC formatted list of tools
+   */
+  getToolsList(): MCPToolsListResponse {
+    return {
+      tools: Array.from(this.tools.values()),
+    };
+  }
+
+  /**
+   * Use a specific tool
+   * @param request The tool use request
+   * @returns The tool response
+   */
+  async callTool(request: MCPCallToolRequest): Promise<MCPCallToolResult> {
+    const { name, arguments: args } = request;
+
+    const tool = this.tools.get(name);
+    if (!tool) {
+      throw new Error(`Tool '${name}' not found`);
+    }
+
+    const handler = this.toolHandlers.get(name);
+    if (!handler) {
+      throw new Error(`No handler registered for tool '${name}'`);
+    }
+
+    try {
+      // Validate arguments against the tool's input schema
+      this.validateToolArguments(tool, args);
+
+      // Execute the tool
+      return await handler(args);
+    } catch (error) {
+      return {
+        content: [
+          { type: 'text', text: error instanceof Error ? error.message : 'Unknown error occurred' },
+        ],
+        isError: true,
+      };
+    }
+  }
+
+  /**
+   * Validate tool arguments against the tool's input schema
+   * @param tool The tool definition
+   * @param args The arguments to validate
+   */
+  private validateToolArguments(tool: MCPTool, args: Record<string, any>): void {
+    const { inputSchema } = tool;
+    const { properties, required = [] } = inputSchema;
+
+    // Check required fields
+    for (const requiredField of required) {
+      if (!(requiredField in args)) {
+        throw new Error(`Missing required argument: ${requiredField}`);
+      }
+    }
+
+    // Validate each provided argument
+    for (const [key, value] of Object.entries(args)) {
+      const paramSchema = properties[key];
+      if (!paramSchema) {
+        throw new Error(`Unknown argument: ${key}`);
+      }
+
+      this.validateParameterValue(paramSchema, value, key);
+    }
+  }
+
+  /**
+   * Validate a parameter value against its schema
+   * @param schema The Zod schema for the parameter
+   * @param value The value to validate
+   * @param paramName The parameter name for error messages
+   */
+  private validateParameterValue(schema: any, value: any, paramName: string): void {
+    try {
+      (schema as z.ZodSchema).parse(value);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errorMessage = error.errors.map(e => e.message).join(', ');
+        throw new Error(`Invalid value for ${paramName}: ${errorMessage}`);
+      }
+      throw new Error(
+        `Validation error for ${paramName}: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -64,6 +187,46 @@ export class TarvisClient {
         try {
           if (!isModelSupported(self.availableModels, modelId)) {
             throw new Error(`Unsupported model: ${modelId}`);
+          }
+
+          // Check if we have tools and if the last message is from a human
+          const lastMessage = langChainMessages[langChainMessages.length - 1];
+          const hasTools = self.tools.size > 0;
+
+          // Find the last human message instead of assuming the last message is human
+          const lastHumanMessage = langChainMessages
+            .slice()
+            .reverse()
+            .find(msg => 'type' in msg && msg.type === 'human');
+
+          if (hasTools && !!lastHumanMessage) {
+            // Check if any tools should be used
+            const toolDetectionResult = await self.detectToolUsage(
+              langChainMessages,
+              modelId,
+              temperature
+            );
+
+            if (toolDetectionResult.shouldUseTool) {
+              const toolRequestResponse: ChatResponse = {
+                type: 'toolRequest',
+                threadId,
+                messageId,
+                isRetry,
+                toolRequest: {
+                  toolName: toolDetectionResult.toolName!,
+                  toolDescription: toolDetectionResult.toolDescription!,
+                  inputSchema: toolDetectionResult.inputSchema!,
+                  suggestedParameters: toolDetectionResult.suggestedParameters!,
+                },
+              };
+
+              const formattedToolRequest = formatSSEMessage(toolRequestResponse);
+              controller.enqueue(encoder.encode(formattedToolRequest));
+              controller.close();
+              onComplete?.(formattedToolRequest);
+              return;
+            }
           }
 
           const messages = langChainMessages.map(msg => {
@@ -141,5 +304,116 @@ export class TarvisClient {
         }
       },
     });
+  }
+
+  /**
+   * Detect if any tools should be used for the given messages
+   * @param messages The conversation messages
+   * @param modelId The model to use for detection
+   * @param temperature The temperature for detection
+   * @returns Tool detection result
+   */
+  private async detectToolUsage(
+    messages: any[],
+    modelId: string,
+    temperature: number
+  ): Promise<{
+    shouldUseTool: boolean;
+    toolName?: string;
+    toolDescription?: string;
+    inputSchema?: any;
+    suggestedParameters?: Record<string, any>;
+  }> {
+    if (this.tools.size === 0) {
+      return { shouldUseTool: false };
+    }
+
+    // Find the last human message instead of assuming the last message is human
+    const lastHumanMessage = messages
+      .slice()
+      .reverse()
+      .find(msg => 'type' in msg && msg.type === 'human');
+
+    if (!lastHumanMessage) {
+      return { shouldUseTool: false };
+    }
+
+    // Create a system prompt that lists all available tools with their schemas
+    const toolsList = Array.from(this.tools.values());
+    const toolsDescription = toolsList
+      .map(tool => {
+        const schemaInfo = JSON.stringify(tool.inputSchema, null, 2);
+        return `- ${tool.name}: ${tool.description}
+  Input Schema: ${schemaInfo}`;
+      })
+      .join('\n\n');
+
+    const detectionPrompt = `You are a tool usage detector and parameter suggester. You have access to the following tools:
+
+${toolsDescription}
+
+The user's latest message is: "${lastHumanMessage.content}"
+
+Analyze if any of the available tools would be useful to respond to the user's request. Consider:
+1. Does the user's request match the purpose of any tool?
+2. Would using a tool provide a better response than a regular conversation?
+3. If a tool should be used, what would be sensible default parameters based on the user's message?
+
+Respond with ONLY a JSON object in this exact format:
+{
+  "shouldUseTool": true/false,
+  "toolName": "name_of_tool" (only if shouldUseTool is true),
+  "suggestedParameters": {
+    "param1": "suggested_value1",
+    "param2": "suggested_value2"
+  } (only if shouldUseTool is true, include all required parameters and any optional ones that make sense),
+  "reasoning": "brief explanation of your decision"
+}
+
+If shouldUseTool is false, you can omit toolName and suggestedParameters.`;
+
+    try {
+      const detectionModel = createOrGetModel(this.availableModels, modelId, { temperature: 0.1 });
+      const detectionMessages = [
+        new SystemMessage(detectionPrompt),
+        new HumanMessage(lastHumanMessage.content),
+      ];
+
+      const response = await detectionModel.invoke(detectionMessages);
+      const responseText = response.content.toString().trim();
+
+      // Try to parse the JSON response
+      let detectionResult;
+      try {
+        // Extract JSON from the response (in case there's extra text)
+        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          detectionResult = JSON.parse(jsonMatch[0]);
+        } else {
+          detectionResult = JSON.parse(responseText);
+        }
+      } catch (parseError) {
+        console.error('Failed to parse tool detection response:', parseError);
+        return { shouldUseTool: false };
+      }
+
+      if (detectionResult.shouldUseTool && detectionResult.toolName) {
+        const tool = this.tools.get(detectionResult.toolName);
+        if (tool) {
+          return {
+            shouldUseTool: true,
+            toolName: tool.name,
+            toolDescription: tool.description || '',
+            inputSchema: tool.inputSchema,
+            suggestedParameters: detectionResult.suggestedParameters || {},
+          };
+        }
+      }
+
+      return { shouldUseTool: false };
+    } catch (error) {
+      console.error('Error during tool detection:', error);
+      return { shouldUseTool: false };
+    }
   }
 }

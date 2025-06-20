@@ -13,7 +13,12 @@
     &-icon {
       width: 24px;
       height: 24px;
-      background: linear-gradient(90deg, var(--tarvis-skeleton-start) 25%, var(--tarvis-skeleton-mid) 50%, var(--tarvis-skeleton-start) 75%);
+      background: linear-gradient(
+        90deg,
+        var(--tarvis-skeleton-start) 25%,
+        var(--tarvis-skeleton-mid) 50%,
+        var(--tarvis-skeleton-start) 75%
+      );
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       border-radius: 4px;
@@ -22,7 +27,12 @@
     &-text {
       flex: 1;
       height: 16px;
-      background: linear-gradient(90deg, var(--tarvis-skeleton-start) 25%, var(--tarvis-skeleton-mid) 50%, var(--tarvis-skeleton-start) 75%);
+      background: linear-gradient(
+        90deg,
+        var(--tarvis-skeleton-start) 25%,
+        var(--tarvis-skeleton-mid) 50%,
+        var(--tarvis-skeleton-start) 75%
+      );
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       border-radius: 4px;
@@ -32,7 +42,12 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: linear-gradient(90deg, var(--tarvis-skeleton-start) 25%, var(--tarvis-skeleton-mid) 50%, var(--tarvis-skeleton-start) 75%);
+      background: linear-gradient(
+        90deg,
+        var(--tarvis-skeleton-start) 25%,
+        var(--tarvis-skeleton-mid) 50%,
+        var(--tarvis-skeleton-start) 75%
+      );
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
     }
@@ -46,7 +61,12 @@
 
     &-line {
       height: 16px;
-      background: linear-gradient(90deg, var(--tarvis-skeleton-start) 25%, var(--tarvis-skeleton-mid) 50%, var(--tarvis-skeleton-start) 75%);
+      background: linear-gradient(
+        90deg,
+        var(--tarvis-skeleton-start) 25%,
+        var(--tarvis-skeleton-mid) 50%,
+        var(--tarvis-skeleton-start) 75%
+      );
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       border-radius: 4px;
@@ -67,7 +87,12 @@
     &-title {
       width: 200px;
       height: 24px;
-      background: linear-gradient(90deg, var(--tarvis-skeleton-start) 25%, var(--tarvis-skeleton-mid) 50%, var(--tarvis-skeleton-start) 75%);
+      background: linear-gradient(
+        90deg,
+        var(--tarvis-skeleton-start) 25%,
+        var(--tarvis-skeleton-mid) 50%,
+        var(--tarvis-skeleton-start) 75%
+      );
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       border-radius: 4px;
@@ -97,4 +122,4 @@
   100% {
     background-position: -200% 0;
   }
-} 
+}

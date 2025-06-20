@@ -18,3 +18,15 @@ export {
 } from './tarvis-client';
 
 export { formatSSEMessage, parseSSEMessage } from './sse-utils';
+
+export type {
+  MCPTool,
+  MCPCallToolRequest,
+  MCPCallToolResult,
+  MCPToolsListResponse,
+} from '@tarvis/shared/src';
+
+export { createTextTool, createMultiParamTool } from './mcp-tools';
+
+// Export tool endpoint
+export { createToolEndpoint } from './tool-endpoint';

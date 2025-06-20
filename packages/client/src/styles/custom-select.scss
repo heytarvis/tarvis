@@ -1,0 +1,98 @@
+.tarvis__custom-select {
+  position: relative;
+  width: 100%;
+  padding: 0;
+
+  &__input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--tarvis-border-color);
+    background: var(--tarvis-input-bg);
+    color: var(--tarvis-text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    font-family: inherit;
+
+    &:hover {
+      border-color: var(--tarvis-border-color-hover);
+      background: var(--tarvis-background-hover);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--tarvis-user-avatar-bg);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    &--disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+
+  &__dropdown {
+    position: fixed;
+    z-index: 9999;
+    background: #ffffff;
+    border: 1px solid var(--tarvis-border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 4px;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+  }
+
+  &__option {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    background: #ffffff;
+    margin: 2px 4px;
+    border-radius: 6px;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+
+    &--selected {
+      background: var(--tarvis-background-selected);
+    }
+  }
+
+  &__option-label {
+    font-weight: 500;
+    color: var(--tarvis-text-primary);
+  }
+
+  &__option-description {
+    font-size: 12px;
+    color: var(--tarvis-text-secondary);
+    margin-top: 2px;
+  }
+}
