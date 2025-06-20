@@ -45,6 +45,18 @@ const echoTool = createTextTool(
   'Text to echo back'
 );
 
+// Translation tool
+const translateTool = createMultiParamTool(
+  'translate',
+  'Translate text between languages',
+  {
+    text: z.string().describe('Text to translate'),
+    from: z.string().describe('Source language code (e.g., "en", "es", "fr", "de", "it")'),
+    to: z.string().describe('Target language code (e.g., "en", "es", "fr", "de", "it")'),
+  },
+  ['text', 'from', 'to']
+);
+
 // Add tools to the client
 tarvisClient.addTool(calculatorTool, async (args: Record<string, any>) => {
   try {
@@ -66,6 +78,81 @@ tarvisClient.addTool(calculatorTool, async (args: Record<string, any>) => {
 tarvisClient.addTool(echoTool, async (args: Record<string, any>) => ({
   content: [{ type: 'text', text: `Echo: ${args.text}` }],
 }));
+
+tarvisClient.addTool(translateTool, async (args: Record<string, any>) => {
+  try {
+    const { text, from, to } = args;
+    
+    // Mock translation - in a real app, you'd call a translation API
+    const mockTranslations: Record<string, Record<string, string>> = {
+      'hello': {
+        'es': 'hola',
+        'fr': 'bonjour',
+        'de': 'hallo',
+        'it': 'ciao',
+        'en': 'hello'
+      },
+      'goodbye': {
+        'es': 'adiós',
+        'fr': 'au revoir',
+        'de': 'auf wiedersehen',
+        'it': 'arrivederci',
+        'en': 'goodbye'
+      },
+      'thank you': {
+        'es': 'gracias',
+        'fr': 'merci',
+        'de': 'danke',
+        'it': 'grazie',
+        'en': 'thank you'
+      },
+      'how are you': {
+        'es': '¿cómo estás?',
+        'fr': 'comment allez-vous?',
+        'de': 'wie geht es dir?',
+        'it': 'come stai?',
+        'en': 'how are you'
+      }
+    };
+
+    const lowerText = text.toLowerCase();
+    let translatedText = text; // Default to original text
+
+    // Check if we have a mock translation
+    if (mockTranslations[lowerText] && mockTranslations[lowerText][to]) {
+      translatedText = mockTranslations[lowerText][to];
+    } else {
+      // Generate a mock translation based on language codes
+      const languageNames: Record<string, string> = {
+        'en': 'English',
+        'es': 'Spanish',
+        'fr': 'French',
+        'de': 'German',
+        'it': 'Italian'
+      };
+      
+      const fromLang = languageNames[from] || from;
+      const toLang = languageNames[to] || to;
+      
+      translatedText = `[Mock translation from ${fromLang} to ${toLang}: "${text}"]`;
+    }
+
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `Translation (${from} → ${to}): ${translatedText}` 
+      }],
+    };
+  } catch (error) {
+    return {
+      content: [{ 
+        type: 'text', 
+        text: `Translation error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      }],
+      isError: true,
+    };
+  }
+});
 
 // Enable CORS
 app.use(cors());
