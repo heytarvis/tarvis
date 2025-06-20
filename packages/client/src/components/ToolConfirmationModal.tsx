@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { z } from 'zod';
+import CustomSelect from './CustomSelect';
 
 interface ToolConfirmationModalProps {
   isOpen: boolean;
@@ -119,19 +120,16 @@ export default function ToolConfirmationModal({
         </label>
 
         {inputType === 'select' ? (
-          <select
-            className={`tarvis__tool-parameter-input ${error ? 'tarvis__error' : ''}`}
+          <CustomSelect
+            options={inputProps.options.map((option: string) => ({
+              value: option,
+              label: option,
+            }))}
             value={value}
-            onChange={(e) => handleParameterChange(key, e.currentTarget.value)}
-            required={isRequired}
-          >
-            <option value="">Select an option</option>
-            {inputProps.options.map((option: string) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+            onChange={(selectedValue) => handleParameterChange(key, selectedValue)}
+            placeholder="Select an option"
+            error={!!error}
+          />
         ) : inputType === 'checkbox' ? (
           <input
             type="checkbox"

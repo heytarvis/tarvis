@@ -31,14 +31,5 @@ export {
   createMultiParamTool,
 } from './mcp-tools';
 
-// Export example usage
-export {
-  createClientWithCustomTools,
-  demonstrateToolUsage,
-  createAdvancedTool,
-  advancedToolHandler,
-  demonstrateChatWithTools,
-} from './example-usage';
-
 // Export tool endpoint
 export { createToolEndpoint } from './tool-endpoint';

@@ -13,6 +13,7 @@
     "Chat assistant UI"
   ],
   "peerDependencies": {
-    "@preact/signals": "2.2.0"
+    "@preact/signals": "2.2.0",
+    "@langchain/core": "^0.3.60"
   }
 }
