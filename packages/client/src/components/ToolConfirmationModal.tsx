@@ -40,7 +40,7 @@ export default function ToolConfirmationModal({
       ...prev,
       [key]: value,
     }));
-    
+
     // Clear error for this parameter
     if (errors[key]) {
       setErrors(prev => {
@@ -53,7 +53,7 @@ export default function ToolConfirmationModal({
 
   const validateParameters = (): boolean => {
     const newErrors: Record<string, string> = {};
-    
+
     // Check required fields
     const required = inputSchema.required || [];
     for (const field of required) {
@@ -113,7 +113,7 @@ export default function ToolConfirmationModal({
           {key}
           {isRequired && <span className="tarvis__required">*</span>}
         </label>
-        
+
         {inputType === 'select' ? (
           <select
             className={`tarvis__tool-parameter-input ${error ? 'tarvis__error' : ''}`}
@@ -146,7 +146,7 @@ export default function ToolConfirmationModal({
             placeholder={`Enter ${key}...`}
           />
         )}
-        
+
         {error && <div className="tarvis__tool-parameter-error">{error}</div>}
       </div>
     );
@@ -177,10 +177,10 @@ export default function ToolConfirmationModal({
             </svg>
           </button>
         </div>
-        
+
         <div className="tarvis__tool-modal-content">
           <p className="tarvis__tool-description">{toolDescription}</p>
-          
+
           {Object.keys(inputSchema.properties).length > 0 && (
             <div className="tarvis__tool-parameters">
               <h4>Parameters</h4>
@@ -190,7 +190,7 @@ export default function ToolConfirmationModal({
             </div>
           )}
         </div>
-        
+
         <div className="tarvis__tool-modal-actions">
           <button
             className="tarvis__tool-modal-button tarvis__tool-modal-button--cancel"
@@ -208,4 +208,4 @@ export default function ToolConfirmationModal({
       </div>
     </div>
   );
-} 
+}
